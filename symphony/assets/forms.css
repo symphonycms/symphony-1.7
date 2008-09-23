@@ -1,0 +1,177 @@
+/* forms */
+form {
+	min-height: 100%;
+	overflow: hidden;
+	color: #222;
+}
+fieldset {
+	position: relative;
+	background: #fff;
+	margin: 1.5em 40px 0 40px;
+	padding: 0 305px 9.5em 0;
+	border: none;
+}
+legend {
+	text-shadow: -1px 2px 3px #ddd;
+	font: 1.25em/3 "Lucida Grande", Verdana, sans-serif;
+	color: #222;
+}
+fieldset fieldset {
+	position: absolute;
+	margin: 0;
+	padding: 0 0 2.4em;
+	top: 0;
+	right: 0;
+	width: 265px;
+}
+fieldset fieldset legend {
+	text-shadow: -1px 2px 2px #ddd;
+	font: bold 1em/1.5 "Lucida Grande", Tahoma, sans-serif;
+	color: #554;
+}
+label {
+	display: block;
+	position: relative;
+	padding-bottom: 1.5em;
+}
+.group {
+	position: relative;
+	margin-left: -3em;
+	padding: 0.75em 0 0.75em 5em;
+	overflow: hidden;
+	top: -0.75em;
+	left: 1.5em;
+}
+.group label {
+	padding: 0;
+	float: left;
+	width: 50%;
+}
+.group label:first-child {
+	margin: 0 2em 0 -3.5em;
+}
+.related {
+	position: relative;
+	padding-bottom: 2em;
+}
+.related label {
+	display: inline;
+	padding-left: 1.5em;
+}
+small {
+	display: block;
+	margin: -1.5em 0 0 30%;
+	text-align: right;
+	text-shadow: none;
+	font: 1em/1.5 "Lucida Grande", Tahoma, sans-serif;
+	color: #998;
+}
+input, select, textarea {
+	display: block;
+	margin: 3px 0 0;
+	min-width: 100%;
+	max-width: 100%;
+	font: inherit;
+}
+select {
+	min-width: 0;
+	max-width: 1000em;
+	width: 100%;
+}
+textarea {
+	max-width: 100%;
+}
+input[type="checkbox"], input[type="radio"] {
+	display: inline;
+	position: relative;
+	margin: 0 0.25em 0 0;
+	min-width: 1.25em;
+}
+input[type="submit"] {
+	margin: 0 0 0 1em;
+	float: right;
+	min-width: 0;
+}
+input[type="image"] {
+	background-color: #998;
+	margin: 0 1em 0 0;
+	padding: 0;
+	float: left;
+	min-width: 0;
+	cursor: pointer;
+}
+input[type="image"]:hover { background: #222; }
+input[name*="delete"]:hover { background: #d42; }
+input[size] {
+	display: inline;
+	margin: 0 0.25em;
+	min-width: 1em;
+	text-align: right;
+}
+input[type="file"] {
+	display: block;
+	margin: 0 auto;
+	min-width: 0;
+}
+input[disabled], input[disabled]:hover {
+	background: #ccb;
+	cursor: default;
+}
+select[multiple] {
+	height: 10.5em;
+}
+optgroup, tfoot option:first-child + option {
+	margin-top: 1em;
+}
+input[type="checkbox"] + small {
+	display: inline;
+	margin: 0 0.25em;
+	padding: 0;
+}
+input[size] + small {
+	margin: 0.75em 0 -0.5em;
+}
+h2 select {
+	display: inline;
+	position: absolute;
+	margin: 0;
+	right: 0;
+	max-width: 15em;
+	width: auto;
+	font-size: 0.8em;
+}
+fieldset fieldset fieldset {
+	position: relative;
+	background: #f6f6f6;
+	margin-bottom: 20px;
+	border: 1px solid #ddc;
+	padding: 0 20px 5px;
+	overflow: visible;
+	top: 0;
+	left: 0;
+	width: 223px;
+	z-index: 1;
+}
+fieldset fieldset fieldset legend {
+	background: #fff;
+	margin: -1px -21px 19px;
+	padding: 0 42px 3px 0;
+	border-bottom: 1px solid #ddc;
+	float: left;
+	width: 100%;
+	text-shadow: none;
+	font: inherit;
+	color: #222;
+}
+fieldset fieldset ul {
+	padding: 0;
+	clear: both;
+	list-style: none;
+	color: #554;
+}
+fieldset fieldset li {
+	padding-bottom: 1.5em;
+}
+#code-editor {
+	font: 108% Monaco, monospace;
+}

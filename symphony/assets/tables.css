@@ -1,0 +1,169 @@
+/* Tables */
+table {
+	margin: 0 0 8em;
+	border-collapse: collapse;
+	width: 100%;
+}
+th {
+	padding: 20px 40px 0 0;
+	text-align: left;
+	font: 0.91em/2 "Lucida Grande", Tahoma, sans-serif;
+	cursor: default;
+}
+td {
+	background: #f6f6f6;
+	padding: 0.75em 40px 0.75em 0;
+	border-top: thin solid #ddc;
+	border-bottom: thin solid #ddc;
+	text-align: left;
+	font: 1em/1.5 "Lucida Grande", Tahoma, sans-serif;
+	cursor: default;
+}
+th:first-child, td:first-child {
+	padding-left: 40px;
+}
+.even td {
+	background: #fff;
+}
+tbody a {
+	position: relative;
+	padding: 8px 0;
+}
+tbody input {
+	float: right;
+}
+tbody.able input {
+	position: fixed;
+	visibility: hidden;
+	left: -100%;
+}
+.inactive {
+	color: #aa9;
+}
+.inactive a {
+	color: #887;
+}
+.inactive a:hover {
+	color: #222;
+}
+.highlight td {
+	background: #ffb;
+	border-color: #eda;
+	color: #222;
+}
+.highlight a {
+	color: #57b;
+}
+tbody td[colspan] {
+	color: #998;
+}
+.selected td {
+	background: #5576c2;
+	border-color: #6783cb;
+	color: #fff;
+}
+.selected.even td {
+	background: #597bc6;
+}
+.selected a {
+	color: #fff;
+}
+tfoot td {
+	background: none;
+	padding: 20px 40px 0;
+	border-bottom-color: #fff;
+	text-align: right;
+	color: #998;
+}
+tfoot select, tfoot input[type="submit"] {
+	display: inline;
+	margin: 0 0 0 10px;
+	float: none;
+	width: auto;
+}
+.page {
+	margin: -9.9em 0 6.3em;
+	float: left;
+	color: #aa9;
+}
+.page.brief {
+	margin: -6.3em 0 6.3em;
+}
+.page li {
+	display: inline;
+	margin-left: 1em;
+	font-size: 0.95em;
+}
+.page li[title] {
+	color: #222;
+}
+.page a {
+	text-decoration: none;
+}
+tfoot input[type="image"] {
+	margin: -8px 0;
+	border: 10px solid #fff;
+	float: left;
+}
+tfoot input[type="image"]:first-child {
+	margin-left: -10px;
+}
+tfoot small {
+	margin: 0;
+	padding: 0;
+	float: left;
+	width: auto;
+	font: 0.91em/1 "Lucida Grande", Tahoma, sans-serif;
+}
+
+/* Icons */
+td:first-child a[class] {
+	margin: -8px 0;
+	padding-left: 20px;
+	float: left;
+}
+.content {
+	background: url("images/icons/content.png") no-repeat;
+}
+.content-locked {
+	background: url("images/icons/content-locked.png") no-repeat;
+}
+.component {
+	background: url("images/icons/component.png") no-repeat;
+}
+.framework {
+	background: url("images/icons/framework.png") no-repeat;
+}
+.author {
+	background: url("images/icons/author.png") no-repeat;
+}
+.admin {
+	background: url("images/icons/admin.png") no-repeat;
+}
+.ticket {
+	background: url("images/icons/ticket.png") no-repeat;
+}
+.ticket-new {
+	background: url("images/icons/ticket-new.png") no-repeat;
+}
+.petition {
+	background: url("images/icons/petition.png") no-repeat;
+}
+.petition-signed {
+	background: url("images/icons/petition-signed.png") no-repeat;
+}
+.campfire {
+	background: url("images/icons/campfire.png") no-repeat;
+}
+.campfire-certified {
+	background: url("images/icons/campfire-certified.png") no-repeat;
+}
+.campfire-installed {
+	background: url("images/icons/campfire-installed.png") no-repeat;
+}
+.comment {
+	background: url("images/icons/comment.png") no-repeat;
+}
+.comment-spam {
+	background: url("images/icons/comment-spam.png") no-repeat;
+}

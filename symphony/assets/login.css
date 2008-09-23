@@ -1,0 +1,53 @@
+@import url("basic.css");
+@import url("forms.css");
+
+/* Login */
+h1 {
+	position: absolute;
+	top: 140px;
+	left: 50%;
+	width: 220px;
+	margin-left: -138px;
+	padding-left: 54px;
+	border: 1px solid #aa9;
+	border-top-color: #776;
+	border-bottom: none;
+	background: #363531 url("images/logo.png") 8px 9px no-repeat;
+	line-height: 46px;
+	z-index: 1;
+}
+div {
+	position: relative;
+	top: -14px;
+	margin: 0 -25px;
+	padding: 6px 8px;
+	background: #eed;
+}
+form {
+	position: absolute;
+	top: 140px;
+	left: 50%;
+	margin-left: -139px;
+	border: 1px solid #eee;
+	border-bottom-color: #ddd;
+	min-height: 0;
+	width: 276px;
+	background: #ddc;
+}
+fieldset {
+	margin: 0;
+	padding: 59px 25px 8px;
+	border: thin solid #bba;
+	border-bottom-color: #998;
+	overflow: hidden;
+	background: #ddc;
+}
+h2, legend {
+	display: none;
+}
+label + label {
+	padding-bottom: 1.75em;
+}
+input[type="submit"] {
+	margin-bottom: 10px;
+}

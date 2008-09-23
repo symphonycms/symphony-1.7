@@ -1,0 +1,36 @@
+Symphony 1.7.01
+=====================
+
+Please visit http://overture21.com/wiki/installation-and-configuration/installing-symphony for
+detail installation instructions.
+
+If you have problems please visit http://overture21.com/forum/comments.php?DiscussionID=1063
+
+This installation contains the most recent security patches.
+
+Installing from scratch
+------------------------
+
+1. Extract the .tar.gz archive and upload its contents to your website.
+2. Run the install.php script.
+3. Once installation is complete, delete install.php.
+
+
+Installing with an existing workspace
+--------------------------------------
+
+1. Extract the .tar.gz archive and upload its contents to your website.
+2. Replace the workspace folder that comes with the archive with your own.
+3. Run the install.php script.
+4. Once installation is complete, delete install.php.
+
+
+Updating From Symphony 1.6.02+ to 1.7.XX
+-----------------------------------------
+
+1. Extract the .tar.gz archive and upload the following
+	- install.php
+	- symphony/
+	- index.php
+2. Run the install.php script.
+3. Once installation is complete, delete install.php.

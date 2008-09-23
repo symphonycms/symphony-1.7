@@ -1,0 +1,78 @@
+/* Basic elements */
+body {
+	background: #fff;
+	font: 68.75%/1.5 "Lucida Grande", Tahoma, sans-serif;
+	color: #222;
+	cursor: default;
+}
+a {
+	text-decoration: underline;
+	color: #5072bf;
+	cursor: pointer;
+}
+a:hover {
+	color: #222;
+}
+p {
+	padding-bottom: 1.25em;
+	text-align: left;
+}
+h1 {
+	text-shadow: -1px 2px 3px #110;
+	font-weight: normal;
+	font-size: 1.25em;
+	line-height: 1;
+	color: #fff;
+}
+h2 {
+	position: relative;
+	margin: 0 40px;
+	padding-top: 9.2em;
+	text-shadow: -1px 2px 3px #ddd;
+	font-weight: normal;
+	font-size: 1.25em;
+	line-height: 1.25;
+	color: #222;
+	cursor: default;
+}
+h3 {
+	position: relative;
+	margin-bottom: 0.75em;
+	padding: 2.25em 0 0.75em;
+	border-bottom: 1px solid #ddc;
+	text-shadow: -1px 2px 2px #ddd;
+	font-weight: bold;
+	font-size: 1em;
+	line-height: 1;
+	color: #554;
+}
+ul {
+	padding: 0 0 1.5em 2.5em;
+	list-style: outside square;
+}
+em {
+	font-family: Helvetica, Verdana, sans-serif;
+}
+ol {
+	padding: 0 0 1.5em 2.5em;
+}
+abbr, acronym {
+	border: none;
+	font: inherit;
+}
+pre {
+	background: #f3f3f3;
+	margin-bottom: 1.25em;
+	padding: 1em 1.25em;
+	border: thin solid #ccc;
+	overflow: auto;
+	max-height: 28em;
+}
+code {
+	font: 108% Monaco, monospace;
+	color: #666;
+}
+* {
+	margin: 0;
+	padding: 0;
+}

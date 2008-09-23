@@ -1,0 +1,442 @@
+/******* Structure *******/
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	color: #333;
+	background-color: #fff;
+	font: 85%/1.5em Verdana, sans-serif;
+	text-align: center;
+}
+
+#package {
+	width: 600px;
+	text-align: left;
+	margin: 0 auto;
+}
+
+/******* Links *******/
+
+a {
+	color: #069;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #69c;
+}
+
+/******* Masthead / Logo *******/
+
+h1#logo a {
+	display: block;
+	color: #fff;
+	background-color: #333;
+	font: 50%/1em "Lucida Grande", Sans-serif;
+	padding: 10px;
+}
+
+h1#logo a:hover {
+	color: #69c;
+}
+
+h1#logo a small {
+	background: url("../img/cubic-logo.gif") left center no-repeat;
+	float: right;
+	font-family: Helvetica, Sans-serif;
+	text-transform: capitalise;
+	padding-left: 18px;
+}
+
+/******* Menu *******/
+
+ul#menu {
+	list-style: none;
+	margin: 15px 0;
+	text-align: right;
+}
+
+ul#menu li {
+	display: inline;
+	margin-right: 10px;
+}
+
+/******* Content Heading *******/
+
+h2 {
+	width: 180px;
+	border-top: 5px solid #333;
+	font: 105% DIN, "Lucida Grande", Verdana, Sans-serif;
+	text-align: center;
+	text-transform: uppercase;
+	padding: 10px 0;
+	margin: 40px 0 20px;
+}
+
+h2 small {
+	position: relative;
+	top: -0.7em;
+	left: -0.2em;
+	color: #aaa;
+	font: 60%/1.5em Verdana, Sans-serif;
+}
+
+/******* Article Header *******/
+
+.article-header {
+	position: relative;
+	padding: 7px 0 7px 96px;
+	background: #eee url("../img/article-header-bottom.gif") left bottom no-repeat;
+	margin-bottom: 25px;
+	width: 290px;
+}
+
+h3 {
+	position: relative;
+	padding: 3px 10px 0;
+	border-left: 2px solid #333;
+	font: 110%/1.5 "Lucida Grande", Verdana, Sans-serif;
+}
+
+p.filed-under {
+	margin: 0;
+	padding: 3px 10px;
+	border-left: 2px solid #333;
+	color: #666;
+	font: 85%/1.5 Helvetia, Arial, Sans-serif;
+}
+
+p.date {
+	position: absolute;
+	margin: 0;
+	top: 0;
+	left: 0;
+	padding: 14px 299px 10px 10px;
+	color: #666;
+	background: url("../img/article-header-top.gif") left top no-repeat;
+	font: 85%/1.5 "Lucida Grande", Verdana, Sans-serif;
+	text-align: right;
+	text-transform: uppercase;
+	width: 77px;
+}
+
+p.date span {
+	display: block;
+	color: #333;
+	font-size: 135%;
+}
+
+/******* Article *******/
+
+.article-body {
+	background: url("../img/article-lquote.gif") left top no-repeat;
+	padding: 10px;
+}
+
+p.more-info {
+	background: url("../img/article-rquote.gif") right bottom no-repeat;
+	text-align: right;
+	padding: 10px;
+	margin-top: -20px;
+}
+
+p.more-info em {
+	color: #888;
+}
+
+#image-block {
+	border-top: 3px solid #ddd;
+	border-bottom: 3px solid #ddd;
+	text-align: center;
+	margin: 20px;
+	padding: 0;
+}
+
+#image-block img {
+	float: none;
+	display: inline;
+	margin: 5px 5px 0 0;
+}
+
+/******* Typography *******/
+
+p {
+	font: 90%/1.8em Verdana, Sans-serif;
+	margin-bottom: 10px;
+}
+
+p a {
+	border-bottom: 1px dotted #ccc;
+}
+
+img {
+	float: left;
+	border: 1px dotted #ccc;
+	padding: 3px;
+	margin: 0 10px 10px 0;
+}
+
+img.edit {
+	float: none;
+	border: none;
+	padding: 0;
+	margin: 0;
+}
+
+ul {
+	margin: 0 30px 20px;
+}
+
+ol {
+	margin: 0 30px 20px;
+}
+
+blockquote {
+	color: #aaa;
+	border-left: solid 5px #eee;
+	border-right: solid 5px #eee;
+	padding: 0 10px;
+	margin: 0 50px 20px;
+}
+
+blockquote p {
+	font-style: italic;
+}
+
+cite {
+	display: block;
+	font-style: normal;
+	text-align: right;
+	
+}
+
+/******* Comments *******/
+
+dl.comment {
+	border-top: 1px dotted #333;
+	padding-top: 10px;
+	margin-bottom: 20px;
+}
+
+dl.comment dt {
+	float: left;
+	width: 150px;
+	text-align: right;
+	padding-bottom: 5px;
+}
+
+dl.comment dt small {
+	display: block;
+	color: #bbb;
+	font: 85% Helvetia, Sans-serif;
+}
+
+dl.comment dd {
+	padding-left: 15px;
+	margin: 0 0 10px 180px;
+}
+
+/******* Listing *******/
+
+dl.listing {
+	border-top: 1px dotted #333;
+	padding-top: 10px;
+	margin-bottom: 20px;
+}
+
+dl.listing dt {
+	float: left;
+	color: #666;
+	font-size: 90%;
+	font-style: italic;
+}
+
+dl.listing dd {
+	background: url("../img/tumble-log.gif") left 0.5em no-repeat;
+	padding-left: 15px;
+	margin: 0 0 10px 110px;
+}
+
+
+/******* Archive *******/
+
+#archive a small {
+	color: #aaa;
+	font-style: italic;
+	font-size: 85%;
+}
+
+#archive a {
+	display: block;
+	padding: 0 10px;
+}
+
+#archive a:hover {
+	color: #fff;
+	background-color: #ccc;	
+}
+
+#archive a.active {
+	color: #fff;
+	background-color: #ccc;
+}
+
+#archive ul li {
+	font-size: 90%;
+	margin: 0 0 5px;
+}
+
+ul#year {
+	float: left;
+	list-style: none;
+	margin: 0;
+}
+
+ul#month {
+	float: left;
+	list-style: none;
+	border-left: 1px dotted #333;
+	padding-left: 20px;
+	margin-left: 25px;
+}
+
+ul#past-entries {
+	list-style: none;
+	border-left: 1px dotted #333;
+	padding-left: 20px;
+	margin-left: 225px;
+}
+
+/******* Forms *******/
+
+#contact-form {
+	margin-top: 80px;
+}
+
+#guideline {
+	float: right;
+	color: #333;
+	width: 241px;
+	font: 80%/1.5em Verdana, Sans-serif;
+}
+
+#guideline h4 {
+	border-bottom: 1px dotted #333;
+	text-transform: uppercase;
+	font: 110% Helvetica, Sans-serif;
+	padding-bottom: 6px;
+}
+
+#guideline ul {
+	list-style-type: square;
+	margin: 6px 0 30px 15px;
+}
+
+#guideline li {
+	margin-bottom: 12px;
+}
+
+form {
+	background-color: #e2e4db;
+	width: 320px;
+	font-size: 90%;
+	padding: 9px 9px 25px;
+}
+
+fieldset {
+	border: none;
+}
+
+form label {
+	display: block;
+	color: #333;
+	font: 100% Helvetica, Sans-serif;
+	text-transform: uppercase;
+	line-height: 150%;
+	margin-bottom: 15px;
+}
+
+form label small {
+	display: block;
+	color: #888;
+	font-size: 80%;
+	text-transform: none;
+	text-align: right;
+	margin-left: 40%;
+	margin-top: -1.55em;
+}
+
+form label small a:hover {
+	color: #666;
+	border-color: #888; 
+}
+
+form input, form textarea {
+	display: block;
+	width: 100%;
+}
+
+form textarea {
+	height: 200px;
+}
+
+form input#submit {
+	float: right;
+	display: block;
+	width: 120px;
+}
+
+form p.success {
+	color: #6cc33c;
+	background: #e2e4db url("../img/icon-tick.gif") left center no-repeat;
+	font-size: 99%;
+	margin: 0 0 9px;
+	padding-left: 24px;
+}
+
+form p.error {
+	color: #ff4242;
+	background: #e2e4db url("../img/icon-cross.gif") left center no-repeat;
+	font-size: 99%;
+	margin: 0 0 9px;
+	padding-left: 24px;
+}
+
+/******* Footer *******/
+
+ul#footer {
+	clear: both;
+	color: #888;
+	text-align: right;
+	font-size: 80%;
+	margin: 0 0 20px;
+	padding-top: 40px;
+}
+
+ul#footer li {
+	display: inline;
+	margin-left: 10px;
+}
+
+#footer a {
+	color: #888;
+	border-bottom: 1px dotted #aaa;
+	padding-bottom: 2px;
+}
+
+#footer a:hover {
+	color: #69c;
+}
+
+#footer a.symphony {
+	background: url("../img/symphony-logo.gif") left center no-repeat;
+	padding-left: 24px;
+}
+
+#footer a.rss {
+	background: url("../img/rss-logo.gif") left center no-repeat;
+	padding-left: 29px;
+}

@@ -1,0 +1,77 @@
+@import url("basic.css");
+
+/* Debug */
+body {
+	background: #363531;
+	padding: 2.5em 5em;
+}
+a {
+	text-decoration: none;
+	text-shadow: -1px 2px 3px #110;
+}
+a, a:hover {
+	color: #aa9;
+}
+#active a, a:active {
+	color: #fff;
+}
+h1 {
+	position: relative;
+	background: none;
+	margin: 0 -5em;
+	padding: 0 5em;
+	float: left;
+	width: auto;
+	line-height: 2;
+	color: #fff;
+}
+h1 a {
+	margin: 0;
+	color: #fff;
+}
+ol, ul {
+	margin: 1em -5em;
+	padding: 3em 8em 0;
+	color: #887;
+}
+ul {
+	margin-left: -8em;
+	list-style: none;
+}
+li {
+	float: left;
+}
+ol[id] li, ul[id] li {
+	margin-bottom: -4.5em;
+	padding: 0 4em 5em 0;
+	float: left;
+	clear: both;
+	font: 118% Monaco, monospace;
+}
+h1 + ul {
+	position: relative;
+	margin: 0;
+	padding: 0 0 0 3em;
+	float: left;
+	color: #aa9;
+	z-index: 1;
+}
+ul a {
+	display: block;
+	padding: 0.75em;
+	font: 1em/1 "Lucida Grande", Tahoma, sans-serif;
+}
+code {
+	white-space: pre;
+	font-size: 1em;
+	color: #fff;
+}
+code:empty:after {
+	content: " ";
+}
+#toggle-line-numbers {
+	position: absolute;
+	top: 3em;
+	right: 5em;
+	z-index: 1;
+}

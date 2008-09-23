@@ -1,0 +1,52 @@
+/* error pages */
+body {
+	margin: 0 auto;
+	width: 29em;
+	color: #222;
+	font: 68.75%/1.5 "Lucida Grande", Verdana, sans-serif;
+	cursor: default;
+}
+a {
+	text-decoration: underline;
+	color: #5072bf;
+	cursor: pointer;
+}
+a:hover {
+	color: #222;
+}
+p {
+	margin: 0 0 1.25em;
+}
+h1 {
+	margin: 4em 0 1.5em;
+	text-shadow: -1px 2px 3px #ddd;
+	font-size: 1.25em;
+}
+h1 + p {
+	font-size: 1.1em;
+}
+dl {
+	margin: 0 0 1.5em;
+	padding: 4px;
+	border: thin solid #ddc;
+	color: #776;
+}
+dt, dd {
+	margin: 0;
+	background: #f6f6f6;
+}
+dt {
+	padding: 0.75em 1.25em 0;
+	font-weight: bold;
+}
+dd {
+	padding: 0 1.25em 0.75em;
+	overflow: hidden;
+}
+code {
+	font: 1.2em "Andale Mono", "Courier New", monospace;
+	color: #666;
+}
+.email {
+	display: block;
+}
