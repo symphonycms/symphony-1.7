@@ -5,6 +5,15 @@ NOTE: 1.7.01 is no longer in development. The latest stable branch, 2.X, can be 
 
 This installation contains the most recent security patches.
 
+System Requirements
+-------------------
+
+* PHP 4.3
+* MySQL 3.23 and above
+* XSLT Support (LibXSLT or Sablotron)
+* Some common modules: XML Support (LibXML), ZLib Compression Library and mod_rewrite Apache module
+
+
 Installing from scratch
 ------------------------
 
