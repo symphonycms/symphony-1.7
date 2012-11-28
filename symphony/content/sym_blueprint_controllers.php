@@ -1,35 +1,35 @@
 <?php
 
-	###
-	#
-	#  Symphony web publishing system
-	# 
-	#  Copyright 2004 - 2006 Twenty One Degrees Pty. Ltd. This code cannot be
-	#  modified or redistributed without permission.
-	#
-	#  For terms of use please visit http://21degrees.com.au/products/symphony/terms/
-	#
-	###
+	/***
+	 *
+	 * Symphony web publishing system
+	 *
+	 * Copyright 2004–2006 Twenty One Degrees Pty. Ltd.
+	 *
+	 * @version 1.7
+	 * @licence https://github.com/symphonycms/symphony-1.7/blob/master/LICENCE
+	 *
+	 ***/
 
-	$GLOBALS['pageTitle'] = "Controllers";	
+	$GLOBALS['pageTitle'] = "Controllers";
 
 
 	$EM = new EventManager(array('parent' => &$Admin));
 	$events = $EM->listAll();
-		
+
 	$DSM = new DatasourceManager(array('parent' => &$Admin));
 	$datasources = $DSM->listAll();
-	
+
 	if(isset($_GET['_f'])){
-		switch($_GET['_f']){		
-		
+		switch($_GET['_f']){
+
 			case "complete":
 				$Admin->pageAlert("selected-success", array("Component", "deleted"));
-				break;		
-											
+				break;
+
 		}
 	}
-	
+
 ?>
 	<form id="controllers" action="<?php print $Admin->getCurrentPageURL(); ?>" method="post">
 
@@ -42,7 +42,7 @@
 
 		if(is_array($datasources) && !empty($datasources)){
 			foreach($datasources as $ds){
-				if($ds['can_parse']){				
+				if($ds['can_parse']){
 ?>
 					<li><a href="<?php print URL; ?>/symphony/?page=/blueprint/datasources/edit/&amp;file=<?php print strtolower($ds['handle']); ?>" title="data.<?php print $ds['handle']; ?>.php"><?php print $ds['name']; ?></a></li>
 <?php
@@ -52,12 +52,12 @@
 
 					<li class="external"><a href="<?php print URL; ?>/symphony/?page=/blueprint/datasources/info/&amp;file=<?php print strtolower($ds['handle']); ?>" title="data.<?php print $ds['handle']; ?>.php"><?php print $ds['name']; ?></a></li>
 
-<?php				
+<?php
 				}
-	
+
 			}
 		}
-?>				
+?>
 				</ul>
 			</li>
 			<li>
@@ -68,14 +68,14 @@
 		if(is_array($events) && !empty($events)){
 			foreach($events as $e){
 
-?>				
+?>
 					<li class="external"><a href="<?php print URL; ?>/symphony/?page=/blueprint/events/info/&amp;file=<?php print strtolower($e['handle']); ?>" title="event.<?php print $e['handle']; ?>.php"><?php print $e['name']; ?></a></li>
-					
-<?php		
+
+<?php
 			}
 		}
-?>				
+?>
 				</ul>
-			</li>			
+			</li>
 		</ul>
 	</form>

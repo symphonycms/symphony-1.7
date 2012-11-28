@@ -1,31 +1,31 @@
 <?php
 
-	###
-	#
-	#  Symphony web publishing system
-	# 
-	#  Copyright 2004 - 2006 Twenty One Degrees Pty. Ltd. This code cannot be
-	#  modified or redistributed without permission.
-	#
-	#  For terms of use please visit http://21degrees.com.au/products/symphony/terms/
-	#
-	###
+	/***
+	 *
+	 * Symphony web publishing system
+	 *
+	 * Copyright 2004–2006 Twenty One Degrees Pty. Ltd.
+	 *
+	 * @version 1.7
+	 * @licence https://github.com/symphonycms/symphony-1.7/blob/master/LICENCE
+	 *
+	 ***/
 
 	$EM = new EventManager(array('parent' => &$Admin));
 
-	$oEvent =& $EM->create($_REQUEST['file']);	
+	$oEvent =& $EM->create($_REQUEST['file']);
 
 	$about = $oEvent->about();
 
 	$GLOBALS['pageTitle'] = 'Events > ' . $about['name'];
 
 	$date = $Admin->getDateObj();
-	
+
 	$link = $about['author']['name'];
-	
+
 	if(isset($about['author']['website']))
 		$link = '<a href="' . General::validateURL($about['author']['website']) . '">' . $about['author']['name'] . '</a>';
-		
+
 	elseif(isset($about['author']['email']))
 			$link = '<a href="mailto:' . $about['author']['email'] . '">' . $about['author']['name'] . '</a>';
 ?>
@@ -41,7 +41,7 @@
 			<dt>Version</dt>
 			<dd><?php print $about['version']; ?></dd>
 			<dt>Release Date</dt>
-			<dd><?php print $date->get(true, true, strtotime($about['release-date'])); ?></dd>		
+			<dd><?php print $date->get(true, true, strtotime($about['release-date'])); ?></dd>
 		</dl>
 
 		<dl class="important">
@@ -49,18 +49,18 @@
 			<dd><code><?php print ($about['trigger-condition'] ? $about['trigger-condition'] : 'None'); ?></code></dd>
 			<dd>This is the field name or other condition used to trigger the event.</dd>
 			<dt>Recognised Fields</dt>
-<?php if(!is_array($about['recognised-fields']) || empty($about['recognised-fields'])){ ?>		
+<?php if(!is_array($about['recognised-fields']) || empty($about['recognised-fields'])){ ?>
 			<dd><code>None</code></dd>
 <?php }else{ ?>
 			<dd>
 				<ul>
-<?php 
+<?php
 						foreach($about['recognised-fields'] as $f){
 							list($name, $required, $options) = $f;
-							
+
 							print '					<li><code>'.$name.'</code>'.($options != NULL ? ' <span>('.$options.')</span>' : '').''.($required == true ? ' *' : '').'</li>';
 						}
-						
+
 ?>
 				</ul>
 			</dd>

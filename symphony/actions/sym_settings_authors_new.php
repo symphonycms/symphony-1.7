@@ -1,45 +1,45 @@
 <?php
 
-	###
-	#
-	#  Symphony web publishing system
-	# 
-	#  Copyright 2004 - 2006 Twenty One Degrees Pty. Ltd. This code cannot be
-	#  modified or redistributed without permission.
-	#
-	#  For terms of use please visit http://21degrees.com.au/products/symphony/terms/
-	#
-	###
+	/***
+	 *
+	 * Symphony web publishing system
+	 *
+	 * Copyright 2004–2006 Twenty One Degrees Pty. Ltd.
+	 *
+	 * @version 1.7
+	 * @licence https://github.com/symphonycms/symphony-1.7/blob/master/LICENCE
+	 *
+	 ***/
 
 	if(@array_key_exists("save", $_POST['action']) || @array_key_exists("done", $_POST['action'])) {
-	
-		$fields = $_POST['fields'];	
-		
+
+		$fields = $_POST['fields'];
+
 	    include_once(TOOLKIT . "/class.authormanager.php");
 	    $authorManager = new AuthorManager($Admin);
-			
+
 		$required = array('firstname', 'lastname', 'username', 'email', 'password');
-		
+
 		for($i = 0; $i < count($required); $i++) {
 			if(trim($fields[$required[$i]]) == "") {
 				$errors[$required[$i]] = true;
 			}
 		}
-		
+
 		if(is_array($errors))
 			define("__SYM_ENTRY_MISSINGFIELDS__", true);
-					
+
 		elseif($fields['password'] != $fields['password_confirm'])
-			$Admin->pageAlert("password-mismatch", NULL, false, 'error'); 
+			$Admin->pageAlert("password-mismatch", NULL, false, 'error');
 
 		elseif($authorManager->fetchByUsername($fields['username']))
- 			$Admin->pageAlert("duplicate", array("An Author", "username"), false, 'error'); 
-			
+ 			$Admin->pageAlert("duplicate", array("An Author", "username"), false, 'error');
+
 		else{
-			
+
 
 		    $author =& $authorManager->create();
-			
+
 			$author->set('textformat', $fields['textformat']);
 			$author->set('superuser', $fields['superuser']);
 			$author->set('owner', '0');
@@ -52,21 +52,21 @@
 			$author->set('password', md5($fields['password']));
 			$author->set('allow_sections', @implode(",", $fields['allow_sections']));
 			$author->set('auth_token_active', ($fields['auth_token_active'] ? $fields['auth_token_active'] : 'no'));
-			
+
 			if($author_id = $author->commit()){
-				
+
 				###
 				# Delegate: Create
 				# Description: Creation of a new Author. The ID of the author is provided.
-				$CampfireManager->notifyMembers('Create', CURRENTPAGE, array('author_id' => $author_id)); 	
-													  			
-	  		    if(@array_key_exists("save", $_POST['action']))
-			    	General::redirect(URL."/symphony/?page=/settings/authors/edit/&id=$author_id&_f=saved");	
-			
-			    General::redirect(URL."/symphony/?page=/settings/authors/&_f=saved");	
-												
+				$CampfireManager->notifyMembers('Create', CURRENTPAGE, array('author_id' => $author_id));
 
-			}			
+	  		    if(@array_key_exists("save", $_POST['action']))
+			    	General::redirect(URL."/symphony/?page=/settings/authors/edit/&id=$author_id&_f=saved");
+
+			    General::redirect(URL."/symphony/?page=/settings/authors/&_f=saved");
+
+
+			}
 
 		}
 

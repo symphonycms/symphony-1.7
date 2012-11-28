@@ -1,24 +1,24 @@
 <?php
 
-	###
-	#
-	#  Symphony web publishing system
-	# 
-	#  Copyright 2004 - 2006 Twenty One Degrees Pty. Ltd. This code cannot be
-	#  modified or redistributed without permission.
-	#
-	#  For terms of use please visit http://21degrees.com.au/products/symphony/terms/
-	#
-	###
-	
+	/***
+	 *
+	 * Symphony web publishing system
+	 *
+	 * Copyright 2004–2006 Twenty One Degrees Pty. Ltd.
+	 *
+	 * @version 1.7
+	 * @licence https://github.com/symphonycms/symphony-1.7/blob/master/LICENCE
+	 *
+	 ***/
+
 	##Show PHP Info
 	if(isset($_REQUEST['info'])){
-		phpinfo(); 
+		phpinfo();
 		exit();
 	}
 
     @error_reporting(E_ALL ^ E_NOTICE);
-    @ini_set("allow_call_time_pass_reference", 1); 
+    @ini_set("allow_call_time_pass_reference", 1);
 
 	define('kVERSION', '1.7.01');
 	define('kBUILD', '1701');
@@ -31,61 +31,61 @@
 	## Include the existing Symphony configuration. If it exists
 	## this will be an update, instead of installation.
 	if(is_file('manifest/config.php')){
-		
+
 		require_once('manifest/config.php');
 		require_once('symphony/lib/core/class.configuration.php');
-			
+
 		if(isset($settings) && is_array($settings)){
-			
-			$SymphonyConfiguration =& new Configuration(true);	
+
+			$SymphonyConfiguration =& new Configuration(true);
 			$SymphonyConfiguration->setArray($settings);
-		
+
 			$build = $SymphonyConfiguration->get('build', 'symphony');
-			
+
 			define('kCURRENT_BUILD', $build);
 			define('kCURRENT_VERSION', $build{0} . '.' . $build{1} . ($build{2} != 0 || $build{3} != 0 ? '.' . $build{2} . $build{3} : ''));
-						
+
 			if($build < kBUILD) define('__IS_UPDATE__', true);
-			else define('__ALREADY_UP_TO_DATE__', true);		
-						
+			else define('__ALREADY_UP_TO_DATE__', true);
+
 		}
 
 	}
 
 	## 1.6.02 or lower
 	elseif(is_file('conf/config.php')){
-		
+
 		require_once('conf/config.php');
 		require_once('symphony/lib/core/class.configuration.php');
-				
-		if(isset($settings) && is_array($settings)){		
 
-			$SymphonyConfiguration =& new Configuration(true);	
+		if(isset($settings) && is_array($settings)){
+
+			$SymphonyConfiguration =& new Configuration(true);
 			$SymphonyConfiguration->setArray($settings);
-		
+
 			$build = $SymphonyConfiguration->get('build', 'symphony');
-			
+
 			define('kCURRENT_BUILD', $build);
 			define('kCURRENT_VERSION', $build{0} . '.' . $build{1} . ($build{2} != 0 || $build{3} != 0 ? '.' . $build{2} . $build{3} : ''));
-		
+
 			if($build < kBUILD) define('__IS_UPDATE__', true);
-				
+
 		}
 	}
 
 	## If its not an update, we need to set a couple of important constants.
 	if(!defined('__IS_UPDATE__')){
 		define('__IN_SYMPHONY__', true);
-		define('CRLF', "\r\n");		
+		define('CRLF', "\r\n");
 	}
-	
+
 	## Include some parts of the Symphony engine
 	require_once('symphony/lib/boot/class.object.php');
 	require_once('symphony/lib/core/class.mysql.php');
 	require_once('symphony/lib/core/class.xmlelement.php');
-	require_once('symphony/lib/core/class.general.php');	
+	require_once('symphony/lib/core/class.general.php');
 	require_once('symphony/lib/core/class.log.php');
-	
+
 	header('Expires: Mon, 12 Dec 1982 06:14:00 GMT');
 	header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 	header('Cache-Control: no-cache, must-revalidate, max-age=0');
@@ -95,7 +95,7 @@
     $clean_path = rtrim($clean_path, '/\\');
     $clean_path = preg_replace('/\/{2,}/i', '/', $clean_path);
 
-    define('_INSTALL_DOMAIN_', $clean_path); 
+    define('_INSTALL_DOMAIN_', $clean_path);
 	define('_INSTALL_URL_', 'http://' . $clean_path);
 
 	define('CRLF', "\r\n");
@@ -112,7 +112,7 @@
 	define('MISSING_XML', 7);
 	define('MISSING_PHP', 8);
 	define('MISSING_MOD_REWRITE', 9);
-	
+
 	$header = '<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
@@ -133,21 +133,21 @@
     function installResult(&$Page, &$install_log, $start){
 
         if(!defined("_INSTALL_ERRORS_")){
-            
+
             $install_log->writeToLog("============================================", true);
             $install_log->writeToLog("INSTALLATION COMPLETED: Execution Time - ".max(1, time() - $start)." sec (" . date("d.m.y H:i:s") . ")", true);
             $install_log->writeToLog("============================================" . CRLF . CRLF . CRLF, true);
-        
-        }else{  
-			          
+
+        }else{
+
             $install_log->pushToLog(_INSTALL_ERRORS_, SYM_LOG_ERROR, true);
             $install_log->writeToLog("============================================", true);
             $install_log->writeToLog("INSTALLATION ABORTED: Execution Time - ".max(1, time() - $start)." sec (" . date("d.m.y H:i:s") . ")", true);
             $install_log->writeToLog("============================================" . CRLF . CRLF . CRLF, true);
 
 			$Page->setPage('failure');
-        }                
-        
+        }
+
     }
 
     function writeConfig($dest, $conf, $mode){
@@ -156,7 +156,7 @@
 
         foreach($conf['define'] as $key => $val) {
                 $string .= "define('". $key ."', '". addslashes($val) ."');\n";
-        } 
+        }
 
         $string .= '$settings = array();' . "\n\n";
 
@@ -168,7 +168,7 @@
 
         foreach($conf['require'] as $val) {
                 $string .= "require_once('". addslashes($val) . "');\n";
-        }  
+        }
 
         $string .= "?>\n";
 
@@ -180,18 +180,18 @@
 
 		$compatibility = strtoupper($compatibility);
 
-		if($compatibility == 'HIGH'){	
+		if($compatibility == 'HIGH'){
 			$data = str_replace('ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci', '', $data);
 			$data = str_replace('collate utf8_unicode_ci', '', $data);
 		}
 
 		## Silently attempt to change the storage engine. This prevents INNOdb errors.
 		$db->query('SET storage_engine=MYISAM', $e);
-		
+
         $queries = preg_split('/;[\\r\\n]+/', $data, -1, PREG_SPLIT_NO_EMPTY);
 
-        if(is_array($queries) && !empty($queries)){                                
-            foreach($queries as $sql) {					
+        if(is_array($queries) && !empty($queries)){
+            foreach($queries as $sql) {
                 if(trim($sql) != "") $result = $db->query($sql, $error);
                 if(!$result) return false;
             }
@@ -469,14 +469,14 @@
 				  PRIMARY KEY  (`id`),
 				  KEY `utility_id` (`utility_id`,`event`)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-		
-		";		
+
+		";
 	}
 
 	function getDefaultTableData(){
-		
+
 		return "
-		
+
 		INSERT INTO `tbl_entries` VALUES (1, 1, '2006-09-19 22:17:00', '2006-09-19 12:17:00', NULL, 'simplehtml', 'yes');
 		INSERT INTO `tbl_entries` VALUES (3, 1, '2007-03-22 09:00:00', '2007-03-21 23:00:00', NULL, 'simplehtml', 'yes');
 		INSERT INTO `tbl_entries` VALUES (4, 1, '2006-09-19 14:26:00', '2006-09-19 04:26:00', NULL, 'simplehtml', 'yes');
@@ -504,13 +504,13 @@
 		INSERT INTO `tbl_metadata` VALUES (41, 3, 'entry', '2006-09-20 22:46:05', '2006-09-20 12:46:05', '2007-03-22 17:44:42', '2007-03-22 07:44:42', '127.0.0.1', '127.0.0.1', 1, 'http://www.yoursite.com');
 		INSERT INTO `tbl_metadata` VALUES (43, 4, 'entry', '2006-09-21 14:26:11', '2006-09-21 04:26:11', '2006-09-21 14:26:51', '2006-09-21 04:26:51', '127.0.0.1', '127.0.0.1', 1, 'http://www.yoursite.com');
 		INSERT INTO `tbl_metadata` VALUES (44, 5, 'entry', '2006-09-21 14:31:25', '2006-09-21 04:31:25', '2006-09-21 15:59:07', '2006-09-21 05:59:07', '127.0.0.1', '127.0.0.1', 1, 'http://www.yoursite.com');
-		
+
 		";
-		
+
 	}
 
 	function fetchSymphonyConfig(){
-		global $SymphonyConfiguration;		
+		global $SymphonyConfiguration;
 		return $SymphonyConfiguration;
 	}
 
@@ -521,65 +521,65 @@
 			return NULL;
 
 		$e = end($errors);
-		
+
 		return $e['num'] . ': ' . $e['msg'] . ' in query ' . $e['query'];
 
 	}
-	
+
 	Class GeneralExtended extends General{
-		
+
         function realiseDirectory($path, $mode){
 
             if(!empty($path)){
-                
+
                 if(@file_exists($path) && !@is_dir($path)){
                     return false;
-                    
+
                 }elseif(!@is_dir($path)){
 
 			        @mkdir($path);
-       
+
 			        $oldmask = @umask(0);
 			        @chmod($path, @intval($mode, 8));
 			        @umask($oldmask);
-        				    
-				}             
+
+				}
             }
-                
+
             return true;
-            
+
         }
-		
+
 	   	function redirect ($url){
-			
+
 			$url = str_replace("Location:", "", $url); //Just make sure.
-			
-			if(headers_sent($filename, $line)){			
+
+			if(headers_sent($filename, $line)){
 				print "<h1>Error: Cannot redirect to <a href=\"$url\">$url</a></h1><p>Output has already started in $filename on line $line</p>";
 				exit();
 			}
-			
+
 			header('Expires: Mon, 12 Dec 1982 06:00:00 GMT');
 			header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 			header('Cache-Control: no-cache, must-revalidate, max-age=0');
 			header('Pragma: no-cache');
 	        header("Location: $url");
-	        exit();	
+	        exit();
 	    }
-		
+
 		function repeatStr($str, $xx){
-			
+
 			if($xx < 0) $xx = 0;
-			
-			$xx = ceil($xx);	
-				
+
+			$xx = ceil($xx);
+
 			$result = NULL;
-			
-			for($ii = 0; $ii < $xx; $ii++)	
+
+			for($ii = 0; $ii < $xx; $ii++)
 				$result .= $str;
-			
+
 			return $result;
-				
+
 		}
 
 	    function checkRequirement($item, $type, $expected){
@@ -599,16 +599,16 @@
 
 			    case "ext":
 			        foreach(explode(":", $item) as $ext){
-			            $test = extension_loaded($ext);         
+			            $test = extension_loaded($ext);
 			            if($test == $expected) return true;
 			        }
 
 					return false;
 			        break;
 
-			     case "version":    
+			     case "version":
 			        if(version_compare($item, $expected, ">=") != 1) return false;
-			        break;       
+			        break;
 
 			     case "permission":
 			        if(!is_writable($item)) return false;
@@ -616,25 +616,25 @@
 
 			     case "remote":
 			        $result = curler($item);
-			        if(strpos(strtolower($result), "error") !== false) return false;   
+			        if(strpos(strtolower($result), "error") !== false) return false;
 			        break;
 
 			}
 
 			return true;
 
-	    }	
-		
+	    }
+
 	}
 
     Class SymphonyLog extends Log{
-        
+
 		function SymphonyLog($path){
 			$this->setLogPath($path);
-				
+
 			if(@file_exists($this->getLogPath())){
 				$this->open();
-				
+
 			}else{
 				$this->open("OVERRIDE");
 				$this->writeToLog("Symphony Installer Log", true);
@@ -642,8 +642,8 @@
 				$this->writeToLog("Version: ". kVERSION, true);
 				$this->writeToLog("Domain: "._INSTALL_URL_, true);
 				$this->writeToLog("--------------------------------------------", true);
-			}			
-		}		
+			}
+		}
 	}
 
 	Class Action{
@@ -654,8 +654,8 @@
 
 			if(!GeneralExtended::checkRequirement(phpversion(), "version", "4.3")){
 				$Page->log->pushToLog("Requirement - PHP Version is not correct. ".phpversion()." detected." , SYM_LOG_ERROR, true);
-				$missing[] = MISSING_PHP;	
-			}		
+				$missing[] = MISSING_PHP;
+			}
 
 			if(!GeneralExtended::checkRequirement('mysql_connect', "func", true)){
 				$Page->log->pushToLog("Requirement - MySQL extension not present" , SYM_LOG_ERROR, true);
@@ -689,12 +689,12 @@
 		}
 
 		function update1700(&$Page){
-			
+
 			$config = fetchSymphonyConfig();
-			
+
 	        $install_log = $Page->log;
 
-	        $start = time(); 
+	        $start = time();
 
             $install_log->writeToLog(CRLF . '============================================', true);
             $install_log->writeToLog('UPDATE PROCESS STARTED (' . date("d.m.y H:i:s") . ')', true);
@@ -703,40 +703,40 @@
 			$config->set('build', '1701', 'symphony');
 			$config->set('useragent', 'Symphony/1701', 'general');
 		    $config->set('acct_server', kSUPPORT_SERVER, 'symphony');
-		
+
 			$string  = '<?php' . CRLF
 					 . "define('DOCROOT','".DOCROOT."');" . CRLF
 					 . "define('DOMAIN','". str_replace("http://", "", _INSTALL_DOMAIN_) . "');" . CRLF . CRLF
 					 . '$settings = array();' . CRLF;
-		
+
 			$string .= $config->create("php");
 
 			$string .= CRLF . "require_once(DOCROOT . '/symphony/lib/boot/bundle.php');" . CRLF . '?>';
-			
+
 	        $install_log->pushToLog("WRITING: Updates to Configuration File", SYM_LOG_NOTICE, true, true);
 	        if(!GeneralExtended::writeFile(DOCROOT . '/manifest/config.php', $string, $config->get("write_mode", "file"))){
-	            define("_INSTALL_ERRORS_", "Could not write config file. Check permission on /manifest.");       
-	            $install_log->pushToLog("ERROR: Writing Configuration File Failed", SYM_LOG_ERROR, true, true);                         
+	            define("_INSTALL_ERRORS_", "Could not write config file. Check permission on /manifest.");
+	            $install_log->pushToLog("ERROR: Writing Configuration File Failed", SYM_LOG_ERROR, true, true);
 	            installResult($Page, $install_log, $start);
 				return;
 	        }
-	
+
 			if(!defined('_INSTALL_ERRORS_')){
 		        $install_log->pushToLog("Installation Process Completed In ".max(1, time() - $start)." sec", SYM_LOG_NOTICE, true);
-		        installResult($Page, $install_log, $start);	
+		        installResult($Page, $install_log, $start);
 				GeneralExtended::redirect('http://' . rtrim(str_replace('http://', '', _INSTALL_DOMAIN_), '/') . '/symphony/');
 			}
-			
-			return;				
+
+			return;
 		}
 
 		function update1602(&$Page){
 
 			$config = fetchSymphonyConfig();
-			
+
 	        $install_log = $Page->log;
 
-	        $start = time(); 
+	        $start = time();
 
             $install_log->writeToLog(CRLF . '============================================', true);
             $install_log->writeToLog('UPDATE PROCESS STARTED (' . date("d.m.y H:i:s") . ')', true);
@@ -747,143 +747,143 @@
 
 	        $install_log->pushToLog("WRITING: Creating 'manifest' folder (/manifest)", SYM_LOG_NOTICE, true, true);
 	        if(!GeneralExtended::realiseDirectory(DOCROOT . '/manifest', $config->get("write_mode", "directory"))){
-	            define("_INSTALL_ERRORS_", "Could not create 'manifest' directory. Check permission on the root folder.");       
-	            $install_log->pushToLog("ERROR: Creation of 'manifest' folder failed.", SYM_LOG_ERROR, true, true);                         
+	            define("_INSTALL_ERRORS_", "Could not create 'manifest' directory. Check permission on the root folder.");
+	            $install_log->pushToLog("ERROR: Creation of 'manifest' folder failed.", SYM_LOG_ERROR, true, true);
 	            installResult($Page, $install_log, $start);
 				return;
 	        }
 
 	        $install_log->pushToLog("WRITING: Creating 'logs' folder (/manifest/logs)", SYM_LOG_NOTICE, true, true);
 	        if(!GeneralExtended::realiseDirectory(DOCROOT . '/manifest/logs', $config->get("write_mode", "directory"))){
-	            define("_INSTALL_ERRORS_", "Could not create 'logs' directory. Check permission on /manifest.");       
-	            $install_log->pushToLog("ERROR: Creation of 'logs' folder failed.", SYM_LOG_ERROR, true, true);                         
+	            define("_INSTALL_ERRORS_", "Could not create 'logs' directory. Check permission on /manifest.");
+	            $install_log->pushToLog("ERROR: Creation of 'logs' folder failed.", SYM_LOG_ERROR, true, true);
 	            installResult($Page, $install_log, $start);
 				return;
 	        }
 
 	        $install_log->pushToLog("WRITING: Creating 'cache' folder (/manifest/cache)", SYM_LOG_NOTICE, true, true);
 	        if(!GeneralExtended::realiseDirectory(DOCROOT . '/manifest/cache', $config->get("write_mode", "directory"))){
-	            define("_INSTALL_ERRORS_", "Could not create 'cache' directory. Check permission on /manifest.");       
-	            $install_log->pushToLog("ERROR: Creation of 'cache' folder failed.", SYM_LOG_ERROR, true, true);                         
+	            define("_INSTALL_ERRORS_", "Could not create 'cache' directory. Check permission on /manifest.");
+	            $install_log->pushToLog("ERROR: Creation of 'cache' folder failed.", SYM_LOG_ERROR, true, true);
 	            installResult($Page, $install_log, $start);
 				return;
 	        }
 
 	        $install_log->pushToLog("WRITING: Creating 'tmp' folder (/manifest/tmp)", SYM_LOG_NOTICE, true, true);
 	        if(!GeneralExtended::realiseDirectory(DOCROOT . '/manifest/tmp', $config->get("write_mode", "directory"))){
-	            define("_INSTALL_ERRORS_", "Could not create 'tmp' directory. Check permission on /manifest.");       
-	            $install_log->pushToLog("ERROR: Creation of 'tmp' folder failed.", SYM_LOG_ERROR, true, true);                         
+	            define("_INSTALL_ERRORS_", "Could not create 'tmp' directory. Check permission on /manifest.");
+	            $install_log->pushToLog("ERROR: Creation of 'tmp' folder failed.", SYM_LOG_ERROR, true, true);
 	            installResult($Page, $install_log, $start);
 				return;
 	        }
 
-			## Update the config	
+			## Update the config
 			$config->set('build', '1701', 'symphony');
 			$config->set('useragent', 'Symphony/1701', 'general');
 			$config->set('exclude-parameter-declarations', 'off', 'xsl');
 			$config->set('cookie_prefix', 'sym_', 'symphony');
 		    $config->set('acct_server', kSUPPORT_SERVER, 'symphony');
-		
+
 			if(!defined('DOMAIN')){
-						
+
 				$clean_path = $_SERVER["HTTP_HOST"] . dirname($_SERVER["PHP_SELF"]);
 			    $clean_path = rtrim($clean_path, '/\\');
 			    $clean_path = preg_replace('/\/{2,}/i', '/', $clean_path);
-			
+
 				define('DOMAIN', $clean_path);
-				
+
 			}
-	
+
 			$string  = '<?php' . CRLF
 					 . "define('DOCROOT','".DOCROOT."');" . CRLF
 					 . "define('DOMAIN','". str_replace("http://", "", _INSTALL_DOMAIN_) . "');" . CRLF . CRLF
 					 . '$settings = array();' . CRLF;
-		
+
 			$string .= $config->create("php");
 
 			$string .= CRLF . "require_once(DOCROOT . '/symphony/lib/boot/bundle.php');" . CRLF . '?>';
 
 	        $install_log->pushToLog("WRITING: Updates to Configuration File", SYM_LOG_NOTICE, true, true);
 	        if(!GeneralExtended::writeFile(DOCROOT . '/manifest/config.php', $string, $config->get("write_mode", "file"))){
-	            define("_INSTALL_ERRORS_", "Could not write config file. Check permission on /manifest.");       
-	            $install_log->pushToLog("ERROR: Writing Configuration File Failed", SYM_LOG_ERROR, true, true);                         
+	            define("_INSTALL_ERRORS_", "Could not write config file. Check permission on /manifest.");
+	            $install_log->pushToLog("ERROR: Writing Configuration File Failed", SYM_LOG_ERROR, true, true);
 	            installResult($Page, $install_log, $start);
 				return;
 	        }
 
-			$install_log->pushToLog("MYSQL: Establishing Connection...", SYM_LOG_NOTICE, true, false);		
+			$install_log->pushToLog("MYSQL: Establishing Connection...", SYM_LOG_NOTICE, true, false);
 	        if(!$db = new MySQL($config->get("database"))){
-	            define("_INSTALL_ERRORS_", "There was a problem while trying to establish a connection to the MySQL server. Please check your settings.");                                
+	            define("_INSTALL_ERRORS_", "There was a problem while trying to establish a connection to the MySQL server. Please check your settings.");
 	            $install_log->pushToLog("Failed", SYM_LOG_NOTICE,true, true, true);
 	            installResult($Page, $install_log, $start);
 				return;
-				
+
 	        }else{
-	            $install_log->pushToLog("Done", SYM_LOG_NOTICE,true, true, true);           
+	            $install_log->pushToLog("Done", SYM_LOG_NOTICE,true, true, true);
 	        }
-	
+
 			## Make some updates to the tables
-			$install_log->pushToLog("MYSQL: Executing Table Update Queries (1 of 4)...", SYM_LOG_NOTICE, true, false);		
+			$install_log->pushToLog("MYSQL: Executing Table Update Queries (1 of 4)...", SYM_LOG_NOTICE, true, false);
 	        if(!$db->query('ALTER TABLE `tbl_comments` ADD `author_id` INT(11) UNSIGNED NULL AFTER `entry_id`')){
-	            define('_INSTALL_ERRORS_', 'There was an error while trying to execute query. MySQL returned: ' . fetchLastDBError($db));                                
+	            define('_INSTALL_ERRORS_', 'There was an error while trying to execute query. MySQL returned: ' . fetchLastDBError($db));
 	            $install_log->pushToLog("Failed", SYM_LOG_NOTICE,true, true, true);
 	            installResult($Page, $install_log, $start);
 				return;
-	
+
 	        }else{
-	            $install_log->pushToLog("Done", SYM_LOG_NOTICE,true, true, true);           
+	            $install_log->pushToLog("Done", SYM_LOG_NOTICE,true, true, true);
 	        }
-	
-			$install_log->pushToLog("MYSQL: Executing Table Update Queries (2 of 4)...", SYM_LOG_NOTICE, true, false);		
+
+			$install_log->pushToLog("MYSQL: Executing Table Update Queries (2 of 4)...", SYM_LOG_NOTICE, true, false);
 	        if(!$db->query('ALTER TABLE `tbl_comments` ADD INDEX (`author_id`)')){
-	            define('_INSTALL_ERRORS_', 'There was an error while trying to execute query. MySQL returned: ' . fetchLastDBError($db));                                
+	            define('_INSTALL_ERRORS_', 'There was an error while trying to execute query. MySQL returned: ' . fetchLastDBError($db));
 	            $install_log->pushToLog("Failed", SYM_LOG_NOTICE,true, true, true);
 	            installResult($Page, $install_log, $start);
 				return;
-	
+
 	        }else{
-	            $install_log->pushToLog("Done", SYM_LOG_NOTICE,true, true, true);           
+	            $install_log->pushToLog("Done", SYM_LOG_NOTICE,true, true, true);
 	        }
 
-			$install_log->pushToLog("MYSQL: Executing Table Update Queries (3 of 4)...", SYM_LOG_NOTICE, true, false);		
+			$install_log->pushToLog("MYSQL: Executing Table Update Queries (3 of 4)...", SYM_LOG_NOTICE, true, false);
 	        if(!$db->query("ALTER TABLE  `tbl_customfields` CHANGE `type` `type` ENUM('checkbox', 'textarea', 'input', 'select', 'list', 'multiselect', 'upload', 'foreign') DEFAULT 'input' NOT NULL")){
-	            define('_INSTALL_ERRORS_', 'There was an error while trying to execute query. MySQL returned: ' . fetchLastDBError($db));                                
+	            define('_INSTALL_ERRORS_', 'There was an error while trying to execute query. MySQL returned: ' . fetchLastDBError($db));
 	            $install_log->pushToLog("Failed", SYM_LOG_NOTICE,true, true, true);
 	            installResult($Page, $install_log, $start);
 				return;
-	
+
 	        }else{
-	            $install_log->pushToLog("Done", SYM_LOG_NOTICE,true, true, true);           
+	            $install_log->pushToLog("Done", SYM_LOG_NOTICE,true, true, true);
 	        }
 
-			$install_log->pushToLog("MYSQL: Executing Table Update Queries (4 of 4)...", SYM_LOG_NOTICE, true, false);		
+			$install_log->pushToLog("MYSQL: Executing Table Update Queries (4 of 4)...", SYM_LOG_NOTICE, true, false);
 	        if(!$db->query("ALTER TABLE `tbl_campfire` ADD `version` FLOAT(32) UNSIGNED NOT NULL;")){
-	            define('_INSTALL_ERRORS_', 'There was an error while trying to execute query. MySQL returned: ' . fetchLastDBError($db));                                
+	            define('_INSTALL_ERRORS_', 'There was an error while trying to execute query. MySQL returned: ' . fetchLastDBError($db));
 	            $install_log->pushToLog("Failed", SYM_LOG_NOTICE,true, true, true);
 	            installResult($Page, $install_log, $start);
 				return;
-	
+
 	        }else{
-	            $install_log->pushToLog("Done", SYM_LOG_NOTICE,true, true, true);           
+	            $install_log->pushToLog("Done", SYM_LOG_NOTICE,true, true, true);
 	        }
-	
+
 			if(!defined('_INSTALL_ERRORS_')){
 		        $install_log->pushToLog("Installation Process Completed In ".max(1, time() - $start)." sec", SYM_LOG_NOTICE, true);
-		        installResult($Page, $install_log, $start);	
+		        installResult($Page, $install_log, $start);
 				GeneralExtended::redirect('http://' . rtrim(str_replace('http://', '', _INSTALL_DOMAIN_), '/') . '/symphony/');
 			}
-			
+
 			return;
-		
+
 		}
-	
+
 		function install(&$Page, $fields){
 
 			$db = new MySQL;
 
-			$db->connect($fields['database']['host'], 
-						 $fields['database']['username'], 
-						 $fields['database']['password'], 
+			$db->connect($fields['database']['host'],
+						 $fields['database']['username'],
+						 $fields['database']['password'],
 						 $fields['database']['port']);
 
 			if($db->isConnected())
@@ -895,13 +895,13 @@
 				define("kENVIRONMENT_WARNING", true);
 				if(!defined("ERROR")) define("ERROR", 'no-symphony-dir');
 			}
-	
+
 			## Existing .htaccess
 			elseif(is_file(rtrim($fields['docroot'], '/') . '/.htaccess')){
 				$Page->log->pushToLog("Configuration - Existing '.htaccess' file found: " . $fields['docroot'] . '/.htaccess', SYM_LOG_NOTICE, true);
 				define("kENVIRONMENT_WARNING", true);
 				if(!defined("ERROR")) define("ERROR", 'existing-htaccess');
-			}			
+			}
 
 			## Cannot write to workspace
 			elseif(is_dir(rtrim($fields['docroot'], '/') . '/workspace') && !is_writable(rtrim($fields['docroot'], '/') . '/workspace')){
@@ -917,7 +917,7 @@
 				if(!defined("ERROR")) define("ERROR", 'no-write-permission-root');
 			}
 
-			## Failed to establish database connection	
+			## Failed to establish database connection
 			elseif(!$db->isConnected()){
 				$Page->log->pushToLog("Configuration - Could not establish database connection", SYM_LOG_NOTICE, true);
 				define("kDATABASE_CONNECTION_WARNING", true);
@@ -926,108 +926,108 @@
 
 			## Failed to select database
 			elseif(!$db->select($fields['database']['name'])){
-				$Page->log->pushToLog("Configuration - Database '".$fields['database']['name']."' Not Found", SYM_LOG_NOTICE, true);	
+				$Page->log->pushToLog("Configuration - Database '".$fields['database']['name']."' Not Found", SYM_LOG_NOTICE, true);
 				define("kDATABASE_CONNECTION_WARNING", true);
 				if(!defined("ERROR")) define("ERROR", 'no-database-connection');
 			}
 
-			## Failed to establish connection	
+			## Failed to establish connection
 			elseif(is_array($tables) && !empty($tables)){
-				$Page->log->pushToLog("Configuration - Database table prefix clash with '".$fields['database']['name']."'", SYM_LOG_NOTICE, true);	
+				$Page->log->pushToLog("Configuration - Database table prefix clash with '".$fields['database']['name']."'", SYM_LOG_NOTICE, true);
 				define("kDATABASE_PREFIX_WARNING", true);
 				if(!defined("ERROR")) define("ERROR", 'database-table-clash');
 			}
 
-			## Username Not Entered	
+			## Username Not Entered
 			elseif(trim($fields['user']['username']) == ''){
-				$Page->log->pushToLog("Configuration - No username entered.", SYM_LOG_NOTICE, true);	
+				$Page->log->pushToLog("Configuration - No username entered.", SYM_LOG_NOTICE, true);
 				define("kUSER_USERNAME_WARNING", true);
 				if(!defined("ERROR")) define("ERROR", 'user-no-username');
 			}
 
-			## Password Not Entered	
+			## Password Not Entered
 			elseif(trim($fields['user']['password']) == ''){
-				$Page->log->pushToLog("Configuration - No password entered.", SYM_LOG_NOTICE, true);	
+				$Page->log->pushToLog("Configuration - No password entered.", SYM_LOG_NOTICE, true);
 				define("kUSER_PASSWORD_WARNING", true);
 				if(!defined("ERROR")) define("ERROR", 'user-no-password');
 			}
 
-			## Password mismatch	
+			## Password mismatch
 			elseif($fields['user']['password'] != $fields['user']['confirm-password']){
-				$Page->log->pushToLog("Configuration - Passwords did not match.", SYM_LOG_NOTICE, true);	
+				$Page->log->pushToLog("Configuration - Passwords did not match.", SYM_LOG_NOTICE, true);
 				define("kUSER_PASSWORD_WARNING", true);
 				if(!defined("ERROR")) define("ERROR", 'user-password-mismatch');
 			}
-			
+
 			## No Name entered
 			elseif(trim($fields['user']['firstname']) == '' || trim($fields['user']['lastname']) == ''){
-				$Page->log->pushToLog("Configuration - Did not enter First and Last names.", SYM_LOG_NOTICE, true);	
+				$Page->log->pushToLog("Configuration - Did not enter First and Last names.", SYM_LOG_NOTICE, true);
 				define("kUSER_NAME_WARNING", true);
 				if(!defined("ERROR")) define("ERROR", 'user-no-name');
 			}
-			
-			
-			## Invalid Email	
+
+
+			## Invalid Email
 			elseif(!ereg('^[a-zA-Z0-9_\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$', $fields['user']['email'])){
-				$Page->log->pushToLog("Configuration - Invalid email address supplied.", SYM_LOG_NOTICE, true);	
+				$Page->log->pushToLog("Configuration - Invalid email address supplied.", SYM_LOG_NOTICE, true);
 				define("kUSER_EMAIL_WARNING", true);
 				if(!defined("ERROR")) define("ERROR", 'user-invalid-email');
 			}
-			
+
 			## Otherwise there are no error, proceed with installation
 			else{
 
 				$config = $fields;
-				
+
 				$kDOCROOT = rtrim($config['docroot'], '/');
-				
+
 		        $database = array_map("trim", $fields['database']);
 
-		        if(!isset($database['host']) || $database['host'] == "") $database['host'] = "localhost";    
+		        if(!isset($database['host']) || $database['host'] == "") $database['host'] = "localhost";
 		        if(!isset($database['port']) || $database['port'] == "") $database['port'] = "3306";
 		        if(!isset($database['prefix']) || $database['prefix'] == "") $database['prefix'] = "sym_";
 
 		        $install_log = $Page->log;
 
-		        $start = time(); 
+		        $start = time();
 
 	            $install_log->writeToLog(CRLF . '============================================', true);
 	            $install_log->writeToLog('INSTALLATION PROCESS STARTED (' . date("d.m.y H:i:s") . ')', true);
 	            $install_log->writeToLog('============================================', true);
 
-		        $db = new MySQL;  
+		        $db = new MySQL;
 
-		        $install_log->pushToLog("MYSQL: Establishing Connection...", SYM_LOG_NOTICE, true, false);       
+		        $install_log->pushToLog("MYSQL: Establishing Connection...", SYM_LOG_NOTICE, true, false);
 		        $db = new MySQL();
 
 		        if(!$db->connect($database['host'], $database['username'], $database['password'], $database['port'])){
-		            define("_INSTALL_ERRORS_", "There was a problem while trying to establish a connection to the MySQL server. Please check your settings.");                                
+		            define("_INSTALL_ERRORS_", "There was a problem while trying to establish a connection to the MySQL server. Please check your settings.");
 		            $install_log->pushToLog("Failed", SYM_LOG_NOTICE,true, true, true);
 		            installResult($Page, $install_log, $start);
 		        }else{
-		            $install_log->pushToLog("Done", SYM_LOG_NOTICE,true, true, true);           
-		        }      
-
-		        $install_log->pushToLog("MYSQL: Selecting Database '".$database['name']."'...", SYM_LOG_NOTICE, true, false); 
-
-		        if(!$db->select($database['name'])){
-		            define("_INSTALL_ERRORS_", "Could not connect to specified database. Please check your settings.");       
-		            $install_log->pushToLog("Failed", SYM_LOG_NOTICE,true, true, true);                         
-		            installResult($Page, $install_log, $start);
-		        }else{
-		            $install_log->pushToLog("Done", SYM_LOG_NOTICE,true, true, true);           
+		            $install_log->pushToLog("Done", SYM_LOG_NOTICE,true, true, true);
 		        }
 
-				$db->setPrefix($database['prefix']); 
+		        $install_log->pushToLog("MYSQL: Selecting Database '".$database['name']."'...", SYM_LOG_NOTICE, true, false);
+
+		        if(!$db->select($database['name'])){
+		            define("_INSTALL_ERRORS_", "Could not connect to specified database. Please check your settings.");
+		            $install_log->pushToLog("Failed", SYM_LOG_NOTICE,true, true, true);
+		            installResult($Page, $install_log, $start);
+		        }else{
+		            $install_log->pushToLog("Done", SYM_LOG_NOTICE,true, true, true);
+		        }
+
+				$db->setPrefix($database['prefix']);
 
 		        $install_log->pushToLog("MYSQL: Creating Tables...", SYM_LOG_NOTICE, true, false);
 		        $error = NULL;
 		        if(!fireSql($db, getTableSchema(), $error, ($config['database']['high-compatibility'] == 'yes' ? 'high' : 'normal'))){
-		            define("_INSTALL_ERRORS_", "There was an error while trying to create tables in the database. MySQL returned: $error");       
-		            $install_log->pushToLog("Failed", SYM_LOG_ERROR,true, true, true);                         
+		            define("_INSTALL_ERRORS_", "There was an error while trying to create tables in the database. MySQL returned: $error");
+		            $install_log->pushToLog("Failed", SYM_LOG_ERROR,true, true, true);
 		            installResult($Page, $install_log, $start);
 		        }else{
-		            $install_log->pushToLog("Done", SYM_LOG_NOTICE,true, true, true);           
+		            $install_log->pushToLog("Done", SYM_LOG_NOTICE,true, true, true);
 		        }
 
         		$author_sql = "INSERT INTO `tbl_authors` "
@@ -1044,13 +1044,13 @@
 		        $db->query($author_sql, $error);
 
 		        if(!empty($error)){
-		            define("_INSTALL_ERRORS_", "There was an error while trying create the default author. MySQL returned: $error");       
-		            $install_log->pushToLog("Failed", SYM_LOG_ERROR, true, true, true);                         
-		            installResult($Page, $install_log, $start);   
+		            define("_INSTALL_ERRORS_", "There was an error while trying create the default author. MySQL returned: $error");
+		            $install_log->pushToLog("Failed", SYM_LOG_ERROR, true, true, true);
+		            installResult($Page, $install_log, $start);
 
-		        }else{	        
-					$install_log->pushToLog("Done", SYM_LOG_NOTICE, true, true, true); 
-				}				
+		        }else{
+					$install_log->pushToLog("Done", SYM_LOG_NOTICE, true, true, true);
+				}
 
 
 				$conf = array();
@@ -1062,13 +1062,13 @@
 
 		        $conf['settings']['admin']['max_upload_size'] = '5242880';
 				$conf['settings']['admin']['handle_length'] = '50';
-				
+
 				$conf['settings']['filemanager']['filetype_restriction'] = 'bmp, jpg, gif, png, doc, rtf, pdf, zip';
 				$conf['settings']['filemanager']['enabled'] = 'yes';
 				$conf['settings']['filemanager']['log_all_upload_attempts'] = 'yes';
-				
+
 		        $conf['settings']['symphony']['build'] = kBUILD;
-		        $conf['settings']['symphony']['acct_server'] = kSUPPORT_SERVER;	
+		        $conf['settings']['symphony']['acct_server'] = kSUPPORT_SERVER;
 		        $conf['settings']['symphony']['update'] = '5';
 		        $conf['settings']['symphony']['lastupdatecheck'] = time();
 		        $conf['settings']['symphony']['prune_logs'] = '1';
@@ -1136,44 +1136,44 @@
 
 		        $install_log->pushToLog("WRITING: Creating 'manifest' folder (/manifest)", SYM_LOG_NOTICE, true, true);
 		        if(!GeneralExtended::realiseDirectory($kDOCROOT . '/manifest', $conf['settings']['directory']['write_mode'])){
-		            define("_INSTALL_ERRORS_", "Could not create 'manifest' directory. Check permission on the root folder.");       
-		            $install_log->pushToLog("ERROR: Creation of 'manifest' folder failed.", SYM_LOG_ERROR, true, true);                         
+		            define("_INSTALL_ERRORS_", "Could not create 'manifest' directory. Check permission on the root folder.");
+		            $install_log->pushToLog("ERROR: Creation of 'manifest' folder failed.", SYM_LOG_ERROR, true, true);
 		            installResult($Page, $install_log, $start);
 					return;
 		        }
 
 		        $install_log->pushToLog("WRITING: Creating 'logs' folder (/manifest/logs)", SYM_LOG_NOTICE, true, true);
 		        if(!GeneralExtended::realiseDirectory($kDOCROOT . '/manifest/logs', $conf['settings']['directory']['write_mode'])){
-		            define("_INSTALL_ERRORS_", "Could not create 'logs' directory. Check permission on /manifest.");       
-		            $install_log->pushToLog("ERROR: Creation of 'logs' folder failed.", SYM_LOG_ERROR, true, true);                         
+		            define("_INSTALL_ERRORS_", "Could not create 'logs' directory. Check permission on /manifest.");
+		            $install_log->pushToLog("ERROR: Creation of 'logs' folder failed.", SYM_LOG_ERROR, true, true);
 		            installResult($Page, $install_log, $start);
 					return;
 		        }
 
 		        $install_log->pushToLog("WRITING: Creating 'cache' folder (/manifest/cache)", SYM_LOG_NOTICE, true, true);
 		        if(!GeneralExtended::realiseDirectory($kDOCROOT . '/manifest/cache', $conf['settings']['directory']['write_mode'])){
-		            define("_INSTALL_ERRORS_", "Could not create 'cache' directory. Check permission on /manifest.");       
-		            $install_log->pushToLog("ERROR: Creation of 'cache' folder failed.", SYM_LOG_ERROR, true, true);                         
+		            define("_INSTALL_ERRORS_", "Could not create 'cache' directory. Check permission on /manifest.");
+		            $install_log->pushToLog("ERROR: Creation of 'cache' folder failed.", SYM_LOG_ERROR, true, true);
 		            installResult($Page, $install_log, $start);
 					return;
 		        }
 
 		        $install_log->pushToLog("WRITING: Creating 'tmp' folder (/manifest/tmp)", SYM_LOG_NOTICE, true, true);
 		        if(!GeneralExtended::realiseDirectory($kDOCROOT . '/manifest/tmp', $conf['settings']['directory']['write_mode'])){
-		            define("_INSTALL_ERRORS_", "Could not create 'tmp' directory. Check permission on /manifest.");       
-		            $install_log->pushToLog("ERROR: Creation of 'tmp' folder failed.", SYM_LOG_ERROR, true, true);                         
+		            define("_INSTALL_ERRORS_", "Could not create 'tmp' directory. Check permission on /manifest.");
+		            $install_log->pushToLog("ERROR: Creation of 'tmp' folder failed.", SYM_LOG_ERROR, true, true);
 		            installResult($Page, $install_log, $start);
 					return;
 		        }
 
 		        $install_log->pushToLog("WRITING: Configuration File", SYM_LOG_NOTICE, true, true);
 		        if(!writeConfig($kDOCROOT . "/manifest/", $conf, $conf['settings']['file']['write_mode'])){
-		            define("_INSTALL_ERRORS_", "Could not write config file. Check permission on /manifest.");       
-		            $install_log->pushToLog("ERROR: Writing Configuration File Failed", SYM_LOG_ERROR, true, true);                         
+		            define("_INSTALL_ERRORS_", "Could not write config file. Check permission on /manifest.");
+		            $install_log->pushToLog("ERROR: Writing Configuration File Failed", SYM_LOG_ERROR, true, true);
 		            installResult($Page, $install_log, $start);
 		        }
 
-		        $rewrite_base = dirname($_SERVER['PHP_SELF']); 
+		        $rewrite_base = dirname($_SERVER['PHP_SELF']);
 
 		        $rewrite_base = trim($rewrite_base, '/');
 
@@ -1188,13 +1188,13 @@
 
 	### DO NOT APPLY RULES WHEN REQUESTING "favicon.ico"
 	RewriteCond %{REQUEST_FILENAME} favicon.ico [NC]
-	RewriteRule .* - [S=14] 
+	RewriteRule .* - [S=14]
 
 	### IMAGE RULES
 	RewriteRule ^image/([0-9]+)\/([0-9]+)\/(0|1)\/([a-fA-f0-9]{1,6})\/external/([\W\w]+)\.(jpg|gif|jpeg|png|bmp)$   /'.$rewrite_base.'symphony/image.php?width=$1&height=$2&crop=$3&bg=$4&_f=$5.$6&external=true [L]
 	RewriteRule ^image/external/([\W\w]+)\.(jpg|gif|jpeg|png|bmp)$   /'.$rewrite_base.'symphony/image.php?width=0&height=0&crop=0&bg=0&_f=$1.$2&external=true [L]
 
-	RewriteRule ^image/([0-9]+)\/([0-9]+)\/(0|1)\/([a-fA-f0-9]{1,6})\/external/(.*)\.(jpg|gif|jpeg|png|bmp)$   /'.$rewrite_base.'symphony/image.php?width=$1&height=$2&crop=$3&bg=$4&_f=$5.$6&external=true [L]	    
+	RewriteRule ^image/([0-9]+)\/([0-9]+)\/(0|1)\/([a-fA-f0-9]{1,6})\/external/(.*)\.(jpg|gif|jpeg|png|bmp)$   /'.$rewrite_base.'symphony/image.php?width=$1&height=$2&crop=$3&bg=$4&_f=$5.$6&external=true [L]
 	RewriteRule ^image/external/(.*)\.(jpg|gif|jpeg|png|bmp)$  /'.$rewrite_base.'symphony/image.php?width=0&height=0&crop=0&bg=0&_f=$1.$2&external=true [L]
 
 	RewriteRule ^image/([0-9]+)\/([0-9]+)\/(0|1)\/([a-fA-f0-9]{1,6})\/([\W\w]+)\.(jpg|gif|jpeg|png|bmp)$   /'.$rewrite_base.'symphony/image.php?width=$1&height=$2&crop=$3&bg=$4&_f=$5.$6 	[L]
@@ -1223,108 +1223,108 @@ IndexIgnore *
 
 		        $install_log->pushToLog("CONFIGURING: Frontend", SYM_LOG_NOTICE, true, true);
 		        if(!GeneralExtended::writeFile($kDOCROOT . "/.htaccess", $htaccess, $conf['settings']['file']['write_mode'])){
-		            define("_INSTALL_ERRORS_", "Could not write .htaccess file. Check permission on " . $kDOCROOT);       
-		            $install_log->pushToLog("ERROR: Writing .htaccess File Failed", SYM_LOG_ERROR, true, true);                          
+		            define("_INSTALL_ERRORS_", "Could not write .htaccess file. Check permission on " . $kDOCROOT);
+		            $install_log->pushToLog("ERROR: Writing .htaccess File Failed", SYM_LOG_ERROR, true, true);
 		            installResult($Page, $install_log, $start);
 		        }
-		
+
 				if(@is_file($fields['docroot'] . '/workspace/workspace.conf')){
-					
+
 			        $install_log->pushToLog("CONFIGURING: Importing Workspace", SYM_LOG_NOTICE, true, false);
 			        if(!fireSql($db, file_get_contents($fields['docroot'] . '/workspace/workspace.conf') . getDefaultTableData(), $error, ($config['database']['high-compatibility'] == 'yes' ? 'high' : 'normal'))){
-			            define("_INSTALL_ERRORS_", "There was an error while trying to import the workspace data. MySQL returned: $error");       
-			            $install_log->pushToLog("Failed", SYM_LOG_ERROR,true, true, true);                         
+			            define("_INSTALL_ERRORS_", "There was an error while trying to import the workspace data. MySQL returned: $error");
+			            $install_log->pushToLog("Failed", SYM_LOG_ERROR,true, true, true);
 			            installResult($Page, $install_log, $start);
-			
-			        }else{	        
-						$install_log->pushToLog("Done", SYM_LOG_NOTICE, true, true, true); 
+
+			        }else{
+						$install_log->pushToLog("Done", SYM_LOG_NOTICE, true, true, true);
 					}
-								
+
 				}elseif(@!is_dir($fields['docroot'] . '/workspace')){
-					
+
 					### Create the workspace folder structure
 					#
-					
+
 			        $install_log->pushToLog("WRITING: Creating 'workspace' folder (/workspace)", SYM_LOG_NOTICE, true, true);
 			        if(!GeneralExtended::realiseDirectory($kDOCROOT . '/workspace', $conf['settings']['directory']['write_mode'])){
-			            define("_INSTALL_ERRORS_", "Could not create 'workspace' directory. Check permission on the root folder.");       
-			            $install_log->pushToLog("ERROR: Creation of 'workspace' folder failed.", SYM_LOG_ERROR, true, true);                         
+			            define("_INSTALL_ERRORS_", "Could not create 'workspace' directory. Check permission on the root folder.");
+			            $install_log->pushToLog("ERROR: Creation of 'workspace' folder failed.", SYM_LOG_ERROR, true, true);
 			            installResult($Page, $install_log, $start);
 						return;
 			        }
 
 			        $install_log->pushToLog("WRITING: Creating 'data-sources' folder (/workspace/data-sources)", SYM_LOG_NOTICE, true, true);
 			        if(!GeneralExtended::realiseDirectory($kDOCROOT . '/workspace/data-sources', $conf['settings']['directory']['write_mode'])){
-			            define("_INSTALL_ERRORS_", "Could not create 'workspace/data-sources' directory. Check permission on the root folder.");       
-			            $install_log->pushToLog("ERROR: Creation of 'workspace/data-sources' folder failed.", SYM_LOG_ERROR, true, true);                         
+			            define("_INSTALL_ERRORS_", "Could not create 'workspace/data-sources' directory. Check permission on the root folder.");
+			            $install_log->pushToLog("ERROR: Creation of 'workspace/data-sources' folder failed.", SYM_LOG_ERROR, true, true);
 			            installResult($Page, $install_log, $start);
 						return;
 			        }
 
 			        $install_log->pushToLog("WRITING: Creating 'events' folder (/workspace/events)", SYM_LOG_NOTICE, true, true);
 			        if(!GeneralExtended::realiseDirectory($kDOCROOT . '/workspace/events', $conf['settings']['directory']['write_mode'])){
-			            define("_INSTALL_ERRORS_", "Could not create 'workspace/events' directory. Check permission on the root folder.");       
-			            $install_log->pushToLog("ERROR: Creation of 'workspace/events' folder failed.", SYM_LOG_ERROR, true, true);                         
+			            define("_INSTALL_ERRORS_", "Could not create 'workspace/events' directory. Check permission on the root folder.");
+			            $install_log->pushToLog("ERROR: Creation of 'workspace/events' folder failed.", SYM_LOG_ERROR, true, true);
 			            installResult($Page, $install_log, $start);
 						return;
-			        }					
+			        }
 
 			        $install_log->pushToLog("WRITING: Creating 'masters' folder (/workspace/masters)", SYM_LOG_NOTICE, true, true);
 			        if(!GeneralExtended::realiseDirectory($kDOCROOT . '/workspace/masters', $conf['settings']['directory']['write_mode'])){
-			            define("_INSTALL_ERRORS_", "Could not create 'workspace/masters' directory. Check permission on the root folder.");       
-			            $install_log->pushToLog("ERROR: Creation of 'workspace/masters' folder failed.", SYM_LOG_ERROR, true, true);                         
+			            define("_INSTALL_ERRORS_", "Could not create 'workspace/masters' directory. Check permission on the root folder.");
+			            $install_log->pushToLog("ERROR: Creation of 'workspace/masters' folder failed.", SYM_LOG_ERROR, true, true);
 			            installResult($Page, $install_log, $start);
 						return;
 			        }
 
 			        $install_log->pushToLog("WRITING: Creating 'pages' folder (/workspace/pages)", SYM_LOG_NOTICE, true, true);
 			        if(!GeneralExtended::realiseDirectory($kDOCROOT . '/workspace/pages', $conf['settings']['directory']['write_mode'])){
-			            define("_INSTALL_ERRORS_", "Could not create 'workspace/pages' directory. Check permission on the root folder.");       
-			            $install_log->pushToLog("ERROR: Creation of 'workspace/pages' folder failed.", SYM_LOG_ERROR, true, true);                         
+			            define("_INSTALL_ERRORS_", "Could not create 'workspace/pages' directory. Check permission on the root folder.");
+			            $install_log->pushToLog("ERROR: Creation of 'workspace/pages' folder failed.", SYM_LOG_ERROR, true, true);
 			            installResult($Page, $install_log, $start);
 						return;
 			        }
 
 			        $install_log->pushToLog("WRITING: Creating 'text-formatters' folder (/workspace/text-formatters)", SYM_LOG_NOTICE, true, true);
 			        if(!GeneralExtended::realiseDirectory($kDOCROOT . '/workspace/text-formatters', $conf['settings']['directory']['write_mode'])){
-			            define("_INSTALL_ERRORS_", "Could not create 'workspace/text-formatters' directory. Check permission on the root folder.");       
-			            $install_log->pushToLog("ERROR: Creation of 'workspace/text-formatters' folder failed.", SYM_LOG_ERROR, true, true);                         
+			            define("_INSTALL_ERRORS_", "Could not create 'workspace/text-formatters' directory. Check permission on the root folder.");
+			            $install_log->pushToLog("ERROR: Creation of 'workspace/text-formatters' folder failed.", SYM_LOG_ERROR, true, true);
 			            installResult($Page, $install_log, $start);
 						return;
 			        }
 
 			        $install_log->pushToLog("WRITING: Creating 'upload' folder (/workspace/upload)", SYM_LOG_NOTICE, true, true);
 			        if(!GeneralExtended::realiseDirectory($kDOCROOT . '/workspace/upload', $conf['settings']['directory']['write_mode'])){
-			            define("_INSTALL_ERRORS_", "Could not create 'workspace/upload' directory. Check permission on the root folder.");       
-			            $install_log->pushToLog("ERROR: Creation of 'workspace/upload' folder failed.", SYM_LOG_ERROR, true, true);                         
+			            define("_INSTALL_ERRORS_", "Could not create 'workspace/upload' directory. Check permission on the root folder.");
+			            $install_log->pushToLog("ERROR: Creation of 'workspace/upload' folder failed.", SYM_LOG_ERROR, true, true);
 			            installResult($Page, $install_log, $start);
 						return;
 			        }
 
 			        $install_log->pushToLog("WRITING: Creating 'utilities' folder (/workspace/utilities)", SYM_LOG_NOTICE, true, true);
 			        if(!GeneralExtended::realiseDirectory($kDOCROOT . '/workspace/utilities', $conf['settings']['directory']['write_mode'])){
-			            define("_INSTALL_ERRORS_", "Could not create 'workspace/utilities' directory. Check permission on the root folder.");       
-			            $install_log->pushToLog("ERROR: Creation of 'workspace/utilities' folder failed.", SYM_LOG_ERROR, true, true);                         
+			            define("_INSTALL_ERRORS_", "Could not create 'workspace/utilities' directory. Check permission on the root folder.");
+			            $install_log->pushToLog("ERROR: Creation of 'workspace/utilities' folder failed.", SYM_LOG_ERROR, true, true);
 			            installResult($Page, $install_log, $start);
 						return;
 			        }
-					
-				}	
-							
+
+				}
+
 				if(@!is_dir($fields['docroot'] . '/campfire')){
 			        $install_log->pushToLog("WRITING: Creating 'campfire' folder (/campfire)", SYM_LOG_NOTICE, true, true);
 			        if(!GeneralExtended::realiseDirectory($kDOCROOT . '/campfire', $conf['settings']['directory']['write_mode'])){
-			            define("_INSTALL_ERRORS_", "Could not create 'campfire' directory. Check permission on the root folder.");       
-			            $install_log->pushToLog("ERROR: Creation of 'campfire' folder failed.", SYM_LOG_ERROR, true, true);                         
+			            define("_INSTALL_ERRORS_", "Could not create 'campfire' directory. Check permission on the root folder.");
+			            $install_log->pushToLog("ERROR: Creation of 'campfire' folder failed.", SYM_LOG_ERROR, true, true);
 			            installResult($Page, $install_log, $start);
 						return;
-			        }	
+			        }
 				}
 
 		        $install_log->pushToLog("Installation Process Completed In ".max(1, time() - $start)." sec", SYM_LOG_NOTICE, true);
 
 		        installResult($Page, $install_log, $start);
-		
+
 				GeneralExtended::redirect('http://' . rtrim(str_replace('http://', '', _INSTALL_DOMAIN_), '/') . '/symphony/');
 
 		    }
@@ -1334,7 +1334,7 @@ IndexIgnore *
 	}
 
 	Class Page{
-		
+
 		var $_header;
 		var $_footer;
 		var $_content;
@@ -1343,59 +1343,59 @@ IndexIgnore *
 		var $log;
 		var $missing;
 		var $_page;
-		
+
 		function Page(&$log){
 			$this->_header = $this->_footer = $this->_content = NULL;
 			$this->_result = NULL;
-			$this->_vars = $this->missing = array();	
-			$this->log = $log;		
+			$this->_vars = $this->missing = array();
+			$this->log = $log;
 		}
-		
+
 		function setPage($page){
 			$this->_page = $page;
 		}
-		
+
 		function getPage(){
 			return $this->_page;
 		}
-		
+
 		function setFooter($footer){
 			$this->_footer = $footer;
 		}
-		
+
 		function setHeader($header){
 			$this->_header = $header;
 		}
-		
+
 		function setContent($content){
 			$this->_content = $content;
 		}
-		
+
 		function setTemplateVar($name, $value){
 			$this->_vars[$name] = $value;
 		}
-		
+
 		function render(){
 			$this->_result = $this->_header . $this->_content . $this->_footer;
-			
+
 			if(is_array($this->_vars) && !empty($this->_vars)){
 				foreach($this->_vars as $name => $val){
 					$this->_result = str_replace('<!-- ' . strtoupper($name) . ' -->', $val, $this->_result);
 				}
 			}
-			
+
 			return $this->_result;
-			
+
 		}
-		
+
 		function display(){
 			return ($this->_result ? $this->_result : $this->render());
 		}
-		
+
 	}
-		
+
  	Class Widget{
-	
+
 		function createSimpleElement($name, $value=NULL, $attr=NULL){
 
 			$obj = new XMLElement($name, $value);
@@ -1408,87 +1408,87 @@ IndexIgnore *
 
 			return $obj;
 
-		}	
-		
+		}
+
 		function note($value){
 			return Widget::createSimpleElement('p', $value, array('class' => 'note'));
 		}
-		
+
 		function warning($value){
 			return Widget::createSimpleElement('p', $value, array('class' => 'warning'));
 		}
-		
+
 		function input($name, $value=NULL, $attr=NULL, $type='text'){
 
 			if(!is_array($attr) || empty($attr)) $attr = array();
-			
-			$attr = array_merge($attr, array('name' => $name)); 
 
-			if($type) $attr = array_merge($attr, array('type' => $type)); 
-			if($value) $attr = array_merge($attr, array('value' => $value)); 
-			
+			$attr = array_merge($attr, array('name' => $name));
+
+			if($type) $attr = array_merge($attr, array('type' => $type));
+			if($value) $attr = array_merge($attr, array('value' => $value));
+
 			return Widget::createSimpleElement('input', NULL, $attr);
 		}
-		
+
 		function definitionList($pairs, $class=NULL){
 			$obj = new XMLElement('dl');
-			
+
 			if($class) $obj->setAttribute('class', $class);
-	
+
 			foreach($pairs as $p){
 				list($dt, $dd) = $p;
 				$obj->addChild(new XMLElement('dt', $dt));
 				$obj->addChild(new XMLElement('dd', $dd));
 			}
-			
+
 			return $obj;
 		}
-		
+
 		function select($name, $options, $selected=NULL, $attr=NULL){
-			
+
 			if(!is_array($attr) || empty($attr)) $attr = array();
-			
+
 			$attr = array_merge($attr, array('name' => $name));
-						
+
 			$obj = Widget::createSimpleElement('select', NULL, $attr);
-			
+
 			foreach($options as $o){
 				if(!is_array($o)) $o = array($o => $o);
-				
+
 				$key = array_keys($o);
 				$key = $key[0];
-				
+
 				$val = $o[$key];
-				
+
 				$option = new XMLElement('option', $val);
 				$option->setAttribute('value', $key);
-				if($selected == $key) $option->setAttribute('selected', 'selected'); 
-				
+				if($selected == $key) $option->setAttribute('selected', 'selected');
+
 				$obj->addChild($option);
 			}
-			
+
 			return $obj;
-			
+
 		}
-		
+
 		function label($text, $inputs, $class=NULL){
 			$obj = new XMLElement('label', $text);
 			if($class) $obj->setAttribute('class', $class);
-			
+
 			if(!is_array($inputs) && is_object($inputs)) $inputs = array($inputs);
-			
+
 			foreach($inputs as $ii) $obj->addChild($ii);
-			
+
 			return $obj;
 		}
-	
+
 	}
-	
+
 	$fields = array();
-	
+
 	if(isset($_POST['fields'])) $fields = $_POST['fields'];
 	else{
-		
+
 		$fields['docroot'] = rtrim($_SERVER["DOCUMENT_ROOT"] . '/' . dirname($_SERVER['PHP_SELF']), '/\\');
 		$fields['docroot'] = preg_replace('/\/{2,}/i', '/', $fields['docroot']);
 		$fields['database']['host'] = 'localhost';
@@ -1496,17 +1496,17 @@ IndexIgnore *
 		$fields['database']['prefix'] = 'sym_';
 		$fields['permission']['file'] = '0777';
 		$fields['permission']['directory'] = '0755';
-		
+
 	}
-	
+
 	$warnings = array(
-	
+
 		'no-symphony-dir' => 'No <code>/symphony</code> directory was found at this location. Please upload the contents of Symphony\'s install package here.',
 		'no-write-permission-workspace' => 'Symphony does not have write permission to the existing <code>/workspace</code> directory. Please modify permission settings on this directory and its contents to allow this, such as with a recursive <code>chmod -R</code> command.',
 		'no-write-permission-manifest' => 'Symphony does not have write permission to the <code>/manifest</code> directory. Please modify permission settings on this directory and its contents to allow this, such as with a recursive <code>chmod -R</code> command.',
 		'no-write-permission-root' => 'Symphony does not have write permission to the root directory. Please modify permission settings on this directory. This is necessary only if you are not including a workspace, and can be reverted once installation is complete.',
 		'no-write-permission-htaccess' => 'Symphony does not have write permission to the temporary <code>htaccess</code> file. Please modify permission settings on this file so it can be written to, and renamed.',
-		'existing-htaccess' => 'There appears to be an existing <code>.htaccess</code> file in the Symphony install location. To avoid name clashes, you will need to delete or rename this file.',								
+		'existing-htaccess' => 'There appears to be an existing <code>.htaccess</code> file in the Symphony install location. To avoid name clashes, you will need to delete or rename this file.',
 		'no-database-connection' => 'Symphony was unable to connect to the specified database. You may need to modify host or port settings.',
 		'database-table-clash' => 'The table prefix <code><!-- TABLE-PREFIX --></code> is already in use. Please choose a different prefix to use with Symphony.',
 		'user-password-mismatch' => 'The password and confirmation did not match. Please retype your password.',
@@ -1514,30 +1514,30 @@ IndexIgnore *
 		'user-no-username' => 'You must enter a Username. This will be your Symphony login information.',
 		'user-no-password' => 'You must enter a Password. This will be your Symphony login information.',
 		'user-no-name' => 'You must enter your name.'
-		
+
 	);
-	
+
 	$notices = array(
 		'existing-workspace' => 'An existing <code>/workspace</code> directory was found at this location. Symphony will use this workspace.'
 	);
-	
+
 	Class Display{
-		
+
 		function index(&$Page, &$Contents, $fields){
-		
+
 			global $warnings;
 			global $notices;
-		
+
 			$Form = new XMLElement('form');
 			$Form->setAttribute('action', 'install.php');
 			$Form->setAttribute('method', 'post');
-		
-			/** 
+
+			/**
 			 *
-			 * START ENVIRONMENT SETTINGS 
+			 * START ENVIRONMENT SETTINGS
 			 *
 			**/
-		
+
 /*
 		<fieldset>
 			<legend>Environment Settings</legend>
@@ -1546,34 +1546,34 @@ IndexIgnore *
 			<p class="warning">No <code>/symphony</code> directory was found at this location. Please upload the contents of Symphony's install package here.</p>
 			<p class="note">An existing <code>/workspace</code> directory was found at this location. Symphony will use this workspace.</p>
 			<p class="warning">Symphony does not have write permission to the existing <code>/workspace</code> directory. Please modify permission settings on this directory and its contents to allow this, such as with a recursive <code>chmod -R</code> command.</p>
-			<p class="warning">Symphony does not have write permission to the <code>/manifest</code> directory. Please modify permission settings on this directory and its contents to allow this, such as with a recursive <code>chmod -R</code> command.</p>					
+			<p class="warning">Symphony does not have write permission to the <code>/manifest</code> directory. Please modify permission settings on this directory and its contents to allow this, such as with a recursive <code>chmod -R</code> command.</p>
 		</fieldset>
-*/	
-	
+*/
+
 				$Environment = new XMLElement('fieldset');
 				$Environment->addChild(new XMLElement('legend', 'Environment Settings'));
 				$Environment->addChild(new XMLElement('p', 'Symphony is ready to be installed at the following location.'));
-	
+
 				$class = NULL;
 				if(defined('kENVIRONMENT_WARNING') && kENVIRONMENT_WARNING == true) $class = 'warning';
 
 				$Environment->addChild(Widget::label('Root Path', Widget::input('fields[docroot]', $fields['docroot']), $class));
-			
+
 				if(defined('ERROR') && defined('kENVIRONMENT_WARNING'))
 					$Environment->addChild(Widget::warning($warnings[ERROR]));
-				
+
 				## CHECK FOR AN EXISTING WORKSPACE FOLDER
 				if(!defined('ERROR') && @is_file($fields['docroot'] . '/workspace/workspace.conf')){
-					$Environment->addChild(Widget::note($notices['existing-workspace']));					
+					$Environment->addChild(Widget::note($notices['existing-workspace']));
 				}
-			
+
 				$Form->addChild($Environment);
-		
+
 			/** END ENVIRONMENT SETTINGS **/
 
-			/** 
+			/**
 			 *
-			 * START DATABASE SETTINGS 
+			 * START DATABASE SETTINGS
 			 *
 			**/
 
@@ -1589,17 +1589,17 @@ IndexIgnore *
 			<p class="warning">Symphony was unable to connect to the specified database. You may need to modify host or port settings.</p>
 
 			...
-		
+
 		</fieldset>
-*/	
+*/
 
 				$Database = new XMLElement('fieldset');
 				$Database->addChild(new XMLElement('legend', 'Database Connection'));
 				$Database->addChild(new XMLElement('p', 'Please provide Symphony with access to a database.'));
 
 				$class = NULL;
-				if(defined('kDATABASE_CONNECTION_WARNING') && kDATABASE_CONNECTION_WARNING == true) $class = ' warning';		
-	
+				if(defined('kDATABASE_CONNECTION_WARNING') && kDATABASE_CONNECTION_WARNING == true) $class = ' warning';
+
 				## fields[database][name]
 				$Database->addChild(Widget::label('Database', Widget::input('fields[database][name]', $fields['database']['name'])));
 
@@ -1608,17 +1608,17 @@ IndexIgnore *
 
 				## fields[database][username]
 				$Div->addChild(Widget::label('Username', Widget::input('fields[database][username]', $fields['database']['username'])));
-		
-				## fields[database][password]								
+
+				## fields[database][password]
 				$Div->addChild(Widget::label('Password', Widget::input('fields[database][password]', $fields['database']['password'], NULL, 'password')));
 
 				$Database->addChild($Div);
-			
+
 				if(defined('ERROR') && defined('kDATABASE_CONNECTION_WARNING'))
 					$Database->addChild(Widget::warning($warnings[ERROR]));
 
 /*
-	
+
 			...
 
 			<fieldset>
@@ -1634,47 +1634,47 @@ IndexIgnore *
 				<p>Symphony normally specifies UTF-8 character encoding for database entries. With compatibility mode enabled, Symphony will instead use the default character encoding of your database.</p>
 			</fieldset>
 */
-		
+
 				$Fieldset = new XMLElement('fieldset');
 				$Fieldset->addChild(new XMLElement('legend', 'Advanced Configuration'));
 				$Fieldset->addChild(new XMLElement('p', 'Leave these fields unless you are sure they need to be changed.'));
-		
+
 				$Div = new XMLElement('div');
 				$Div->setAttribute('class', 'group');
-		
+
 				## fields[database][host]
 				$Div->addChild(Widget::label('Host', Widget::input('fields[database][host]', $fields['database']['host'])));
-		
-				## fields[database][port]								
+
+				## fields[database][port]
 				$Div->addChild(Widget::label('Port', Widget::input('fields[database][port]', $fields['database']['port'])));
-														
+
 				$Fieldset->addChild($Div);
 
 				$class = NULL;
-				if(defined('kDATABASE_PREFIX_WARNING') && kDATABASE_PREFIX_WARNING == true) $class = 'warning';		
+				if(defined('kDATABASE_PREFIX_WARNING') && kDATABASE_PREFIX_WARNING == true) $class = 'warning';
 
 				## fields[database][prefix]
 				$Fieldset->addChild(Widget::label('Table Prefix', Widget::input('fields[database][prefix]', $fields['database']['prefix']), $class));
-				
+
 				if(defined('ERROR') && defined('kDATABASE_PREFIX_WARNING'))
 					$Fieldset->addChild(Widget::warning($warnings[ERROR]));
-				
+
 				$Page->setTemplateVar('TABLE-PREFIX', $fields['database']['prefix']);
-										
+
 				## fields[database][high-compatibility]
-				$Fieldset->addChild(Widget::label('Use compatibility mode', Widget::input('fields[database][high-compatibility]', 'yes', NULL, 'checkbox'), 'option'));											
+				$Fieldset->addChild(Widget::label('Use compatibility mode', Widget::input('fields[database][high-compatibility]', 'yes', NULL, 'checkbox'), 'option'));
 
 				$Fieldset->addChild(new XMLElement('p', 'Symphony normally specifies UTF-8 character encoding for database entries. With compatibility mode enabled, Symphony will instead use the default character encoding of your database.'));
-				
-				$Database->addChild($Fieldset);		
-						
+
+				$Database->addChild($Fieldset);
+
 				$Form->addChild($Database);
 
 			/** END DATABASE SETTINGS **/
-	
-			/** 
+
+			/**
 			 *
-			 * START PERMISSION SETTINGS 
+			 * START PERMISSION SETTINGS
 			 *
 			**/
 
@@ -1706,18 +1706,18 @@ IndexIgnore *
 
 				## fields[permission][file]
 				$Div->addChild(Widget::label('Files', Widget::select('fields[permission][file]', array('0777', '0775', '0755', '0666', '0644', '0444'), $fields['permission']['file'])));
-	
-				## fields[permission][directory]						
+
+				## fields[permission][directory]
 				$Div->addChild(Widget::label('Directories', Widget::select('fields[permission][directory]', array('0777', '0775', '0755', '0666', '0644', '0444'), $fields['permission']['directory'])));
 
 				$Permissions->addChild($Div);
 				$Form->addChild($Permissions);
-		
+
 			/** END PERMISSION SETTINGS **/
 
-			/** 
+			/**
 			 *
-			 * START USER SETTINGS 
+			 * START USER SETTINGS
 			 *
 			**/
 
@@ -1733,9 +1733,9 @@ IndexIgnore *
 			<p class="warning">The password and confirmation did not match. Please retype your password.</p>
 
 			...
-		
+
 		</fieldset>
-*/	
+*/
 
 				$User = new XMLElement('fieldset');
 				$User->addChild(new XMLElement('legend', 'User Information'));
@@ -1756,11 +1756,11 @@ IndexIgnore *
 				$Div = new XMLElement('div');
 				$Div->setAttribute('class', 'group' . $class);
 
-				## fields[user][password]							
+				## fields[user][password]
 				$Div->addChild(Widget::label('Password', Widget::input('fields[user][password]', $fields['user']['password'], NULL, 'password')));
-		
-				## fields[user][confirm-password]						
-				$Div->addChild(Widget::label('Confirm Password', Widget::input('fields[user][confirm-password]', $fields['user']['confirm-password'], NULL, 'password')));		
+
+				## fields[user][confirm-password]
+				$Div->addChild(Widget::label('Confirm Password', Widget::input('fields[user][confirm-password]', $fields['user']['confirm-password'], NULL, 'password')));
 
 				$User->addChild($Div);
 
@@ -1788,14 +1788,14 @@ IndexIgnore *
 
 				$class = NULL;
 				if(defined('kUSER_NAME_WARNING') && kUSER_EMAIL_WARNING == true) $class = ' warning';
-			
+
 				$Div = new XMLElement('div');
 				$Div->setAttribute('class', 'group' . $class);
 
 				## fields[database][host]
 				$Div->addChild(Widget::label('First Name', Widget::input('fields[user][firstname]', $fields['user']['firstname'])));
 
-				## fields[database][port]								
+				## fields[database][port]
 				$Div->addChild(Widget::label('Last Name', Widget::input('fields[user][lastname]', $fields['user']['lastname'])));
 
 				$Fieldset->addChild($Div);
@@ -1805,60 +1805,60 @@ IndexIgnore *
 
 				$class = NULL;
 				if(defined('kUSER_EMAIL_WARNING') && kUSER_EMAIL_WARNING == true) $class = 'warning';
-			
+
 				## fields[user][email]
 				$Fieldset->addChild(Widget::label('Email Address', Widget::input('fields[user][email]', $fields['user']['email']), $class));
 
 				if(defined('ERROR') && defined('kUSER_EMAIL_WARNING'))
-					$Fieldset->addChild(Widget::warning($warnings[ERROR]));	
-							
-				$User->addChild($Fieldset);		
+					$Fieldset->addChild(Widget::warning($warnings[ERROR]));
+
+				$User->addChild($Fieldset);
 
 				$Form->addChild($User);
 
 			/** END USER SETTINGS **/
 
-	
-			/** 
+
+			/**
 			 *
 			 * START FORM SUBMIT AREA
 			 *
 			**/
-	
+
 				$Form->addChild(new XMLElement('h2', 'Install Symphony'));
 				$Form->addChild(new XMLElement('p', 'Make sure that you delete the <code>install.php</code> file after Symphony has installed successfully.'));
-				 
+
 				$Submit = new XMLElement('div');
 				$Submit->setAttribute('class', 'submit');
 
-				### submit		
+				### submit
 				$Submit->addChild(Widget::input('submit', 'Install Symphony', NULL, 'submit'));
-		
+
 				### action[install]
-				$Submit->addChild(Widget::input('action[install]', 'true', NULL, 'hidden'));	
+				$Submit->addChild(Widget::input('action[install]', 'true', NULL, 'hidden'));
 
 				$Form->addChild($Submit);
 				$Contents->addChild($Form);
-		
+
 			/** END FORM SUBMIT AREA **/
-		
+
 
 			$Page->setTemplateVar('title', 'Install Symphony');
-			$Page->setTemplateVar('tagline', 'Version ' . kVERSION);		
+			$Page->setTemplateVar('tagline', 'Version ' . kVERSION);
 		}
-	
+
 		function requirements(&$Page, &$Contents){
-	
+
 			$Contents->addChild(new XMLElement('h2', 'Outstanding Requirements'));
 			$Contents->addChild(new XMLElement('p', 'Symphony needs the following requirements satisfied before installation can proceed.'));
-			
+
 			$messages = array();
-		
-			if(in_array(MISSING_PHP, $Page->missing))					
+
+			if(in_array(MISSING_PHP, $Page->missing))
 				$messages[] = array('<abbr title="PHP: Hypertext Pre-processor">PHP</abbr> 4.3 or above',
 							  		'Symphony needs a recent version of <abbr title="PHP: Hypertext Pre-processor">PHP</abbr>.');
-		
-			if(in_array(MISSING_MYSQL, $Page->missing))				
+
+			if(in_array(MISSING_MYSQL, $Page->missing))
 				$messages[] = array('My<abbr title="Structured Query Language">SQL</abbr> 3.23 or above',
 							  	'Symphony needs a recent version of My<abbr title="Structured Query Language">SQL</abbr>.');
 
@@ -1869,10 +1869,10 @@ IndexIgnore *
 			if(in_array(MISSING_XSL, $Page->missing) || in_array(MISSING_XML, $Page->missing))
 				$messages[] = array('<abbr title="eXtensible Stylesheet Language Transformation">XSLT</abbr> Processor',
 							  		'Symphony needs an XSLT processor such as Lib<abbr title="eXtensible Stylesheet Language Transformation">XSLT</abbr> or Sablotron to build pages.');
-		
-																
-			$Contents->addChild(Widget::definitionList($messages));		
-		
+
+
+			$Contents->addChild(Widget::definitionList($messages));
+
 			$Page->setTemplateVar('title', 'Missing Requirements');
 			$Page->setTemplateVar('tagline', 'Version ' . kVERSION);
 		}
@@ -1882,7 +1882,7 @@ IndexIgnore *
 			$Contents->addChild(new XMLElement('p', 'You are already using the most recent version of Symphony. There is no need to run the installer, and can be safely deleted.'));
 
 			$Page->setTemplateVar('title', 'Update Symphony');
-			$Page->setTemplateVar('tagline', 'Version ' . kVERSION);			
+			$Page->setTemplateVar('tagline', 'Version ' . kVERSION);
 		}
 
 		function incorrectVersion(&$Page, &$Contents){
@@ -1890,7 +1890,7 @@ IndexIgnore *
 			$Contents->addChild(new XMLElement('p', 'You are not using the most recent version of Symphony. This update is only compatible with Symphony 1.6.02. You can still update to 1.6.02 using the internal update page.'));
 
 			$Page->setTemplateVar('title', 'Update Symphony');
-			$Page->setTemplateVar('tagline', 'Version ' . kVERSION);			
+			$Page->setTemplateVar('tagline', 'Version ' . kVERSION);
 		}
 
 		function failure(&$Page, &$Contents){
@@ -1900,9 +1900,9 @@ IndexIgnore *
 
 			$Page->setTemplateVar('title', 'Installation Failure');
 			$Page->setTemplateVar('tagline', 'Version ' . kVERSION);
-					
+
 		}
-	
+
 		function update(&$Page, &$Contents){
 /*
 		<form action="" method="post">
@@ -1915,35 +1915,35 @@ IndexIgnore *
 			</div>
 		</form>
 */
-		
+
 			$Form = new XMLElement('form');
 			$Form->setAttribute('action', 'install.php');
 			$Form->setAttribute('method', 'post');
-		
+
 			$Form->addChild(new XMLElement('h2', 'Update Symphony'));
 			$Form->addChild(new XMLElement('p', 'Symphony is ready to update from version '.kCURRENT_VERSION.' to version ' . kVERSION));
-			 
+
 			$Submit = new XMLElement('div');
 			$Submit->setAttribute('class', 'submit');
 
-			### submit		
+			### submit
 			$Submit->addChild(Widget::input('submit', 'Update Symphony', NULL, 'submit'));
-	
+
 			### action[update]
-			$Submit->addChild(Widget::input('action[update'.kCURRENT_BUILD.']', 'true', NULL, 'hidden'));	
+			$Submit->addChild(Widget::input('action[update'.kCURRENT_BUILD.']', 'true', NULL, 'hidden'));
 
 			$Form->addChild($Submit);
-			$Contents->addChild($Form);		
-		
+			$Contents->addChild($Form);
+
 			$Page->setTemplateVar('title', 'Update Symphony');
-			$Page->setTemplateVar('tagline', 'Version ' . kVERSION);		
+			$Page->setTemplateVar('tagline', 'Version ' . kVERSION);
 		}
 	}
 
 	$Log =& new SymphonyLog("install-log.txt");
-	
+
 	$Page =& new Page($Log);
-	
+
 	$Page->setHeader(kHEADER);
 	$Page->setFooter(kFOOTER);
 
@@ -1952,12 +1952,12 @@ IndexIgnore *
 
 	if(defined('__IS_UPDATE__') && __IS_UPDATE__)
 		$Page->setPage((kCURRENT_BUILD < '1602' ? 'incorrectVersion' : 'update'));
-		
-	elseif(defined('__ALREADY_UP_TO_DATE__') && __ALREADY_UP_TO_DATE__)	
+
+	elseif(defined('__ALREADY_UP_TO_DATE__') && __ALREADY_UP_TO_DATE__)
 		$Page->setPage('uptodate');
-				
+
 	else{
-		$Page->setPage('index');	
+		$Page->setPage('index');
 		Action::requirements($Page);
 	}
 
@@ -1969,11 +1969,11 @@ IndexIgnore *
 
 		call_user_func_array(array('Action', $action), array(&$Page, $fields));
 	}
-	
+
 	call_user_func_array(array('Display', $Page->getPage()), array(&$Page, &$Contents, $fields));
-	
+
 	$Page->setContent($Contents->generate(true, 2));
-	
+
 	header('Content-Type: text/html; charset=UTF-8');
 	print $Page->display();
 	exit;

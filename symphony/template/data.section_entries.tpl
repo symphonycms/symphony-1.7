@@ -1,29 +1,29 @@
-<?php	
-		
-	Class ds<!-- CLASS NAME --> Extends DataSource{			
+<?php
+
+	Class ds<!-- CLASS NAME --> Extends DataSource{
 		<!-- DEFINES LIST -->
-	
+
 		function __construct($args = array()){
 			parent::__construct($args);
-			$this->_cache_sections = array('comments', 'entries', 'authors', 'customfields');			
+			$this->_cache_sections = array('comments', 'entries', 'authors', 'customfields');
 		}
-		
-		## This function is required in order to edit it in the data source editor page. 
+
+		## This function is required in order to edit it in the data source editor page.
 		## If this file is in any way edited manually, you must set the return value of this
-		## function to 'false'. Failure to do so may result in your Datasource becoming 
+		## function to 'false'. Failure to do so may result in your Datasource becoming
 		## accidently messed up
 		function allowEditorToParse(){
 			return true;
 		}
-				
+
 		## This function is required in order to identify what type of data source this is for
 		## use in the data source editor. It must remain intact. Do not include this function into
 		## custom data sources
 		function getType(){
 			return '<!-- SECTION NAME -->';
 		}
-					
-		function about(){		
+
+		function about(){
 			return array(
 						 'name' => '<!-- NAME -->',
 						 'description' => '<!-- DESCRIPTION -->',
@@ -31,23 +31,23 @@
 										   'website' => '<!-- AUTHOR-WEBSITE -->',
 										   'email' => '<!-- AUTHOR-EMAIL -->'),
 						 'version' => '<!-- VERSION -->',
-						 'release-date' => '<!-- RELEASE DATE -->');			 
+						 'release-date' => '<!-- RELEASE DATE -->');
 		}
-		
+
 		function grab($param=array()){
-			
+
 			## Decide if we return an emtpy set or not
 			if($this->__forceEmptySet()) {
-				
+
 				##Create the XML container
 				$xml = new XMLElement("<!-- ROOT-ELEMENT -->");
-				$xml->setAttribute("section", $this->getType());				
+				$xml->setAttribute("section", $this->getType());
 				$xml->addChild(new XMLElement("error", "No Records Found."));
 
 				return $xml;
 			}
 
-			$obDate = $this->_parent->getDateObj(); 
+			$obDate = $this->_parent->getDateObj();
 
 			extract($this->_env, EXTR_PREFIX_ALL, 'env');
 
@@ -56,50 +56,50 @@
 			include_once(TOOLKIT . '/class.entrymanager.php');
 			$entryManager = new EntryManager($this->_parent);
 
-			$section_id = $entryManager->fetchSectionIDFromHandle($this->getType());			
+			$section_id = $entryManager->fetchSectionIDFromHandle($this->getType());
 
-			##Prepare the Query			
+			##Prepare the Query
 			if($handle = $this->__resolveDefine("dsFilterHANDLE")){
-				$entries = $entryManager->fetchEntryIDFromPrimaryFieldHandle($section_id, $handle);						
+				$entries = $entryManager->fetchEntryIDFromPrimaryFieldHandle($section_id, $handle);
 				$where .= " AND t1.`id`".($this->__isDefineNotClause("dsFilterHANDLE") ? ' NOT' : '')." IN ('" . @implode("', '", $entries) . "') ";
 
 			}
 
-			if($date = $this->__resolveDefine("dsFilterDAY"))	
-				$where .= " AND DATE_FORMAT(t1.publish_date, '%d') ".($this->__isDefineNotClause("dsFilterDAY") ? '!' : '')."= '" . $date . "' ";			
+			if($date = $this->__resolveDefine("dsFilterDAY"))
+				$where .= " AND DATE_FORMAT(t1.publish_date, '%d') ".($this->__isDefineNotClause("dsFilterDAY") ? '!' : '')."= '" . $date . "' ";
 
-			if($month = $this->__resolveDefine("dsFilterMONTH"))	
+			if($month = $this->__resolveDefine("dsFilterMONTH"))
 				$where .= " AND DATE_FORMAT(t1.publish_date, '%m') ".($this->__isDefineNotClause("dsFilterMONTH") ? '!' : '')."= '" . $month . "' ";
 
-			if($year = $this->__resolveDefine("dsFilterYEAR"))	
-				$where .= " AND DATE_FORMAT(t1.publish_date, '%Y') ".($this->__isDefineNotClause("dsFilterYEAR") ? '!' : '')."= '" . $year . "' ";	
+			if($year = $this->__resolveDefine("dsFilterYEAR"))
+				$where .= " AND DATE_FORMAT(t1.publish_date, '%Y') ".($this->__isDefineNotClause("dsFilterYEAR") ? '!' : '')."= '" . $year . "' ";
 
 			if($this->_dsFilterINCLUDEPOSTDATED != 'yes')
 				$where .= " AND UNIX_TIMESTAMP(t1.publish_date_gmt) <= '" . $obDate->get(false, false) . "' ";
 
 			if(is_array($this->_dsFilterCUSTOM) && !empty($this->_dsFilterCUSTOM)){
-				
+
 				$table_id = 15;
-				
+
 				foreach($this->_dsFilterCUSTOM as $handle => $value){
 
 					$field = $this->_db->fetchRow(0, "SELECT `id`, `type`, `foreign_select_multiple` FROM `tbl_customfields` WHERE `parent_section` = '$section_id' AND `handle` = '$handle' LIMIT 1");
 
 					$value_handle = Lang::createHandle($value, $this->_parent->getConfigVar('handle_length', 'admin'));
-					
+
 					if($field['type'] == 'multiselect' || ($field['type'] == 'foreign' && $field['foreign_select_multiple'] == 'yes')){
 						$joins .= " LEFT JOIN `tbl_entries2customfields_list` AS t$table_id ON t1.`id` = t$table_id.`entry_id` AND t$table_id.field_id = ".$field['id']." ";
 						$where .= " AND (t$table_id.value_raw = '$value' OR t$table_id.handle = '$value_handle') ";
 					}
-					
+
 					else{
 						$joins .= " LEFT JOIN `tbl_entries2customfields` AS t$table_id ON t1.`id` = t$table_id.`entry_id` AND t$table_id.field_id = ".$field['id']." ";
 						$where .= " AND (t$table_id.value_raw = '$value' OR t$table_id.handle = '$value_handle') ";
 
 					}
-					
+
 					$table_id++;
-					
+
 				}
 			}
 
@@ -120,12 +120,12 @@
 					 . "ORDER BY t1.`publish_date_gmt` $sort "
 					 . "LIMIT 1";
 
-				$relative_start = $this->_db->fetchVar('publish_timestamp', 0, $sql); 
+				$relative_start = $this->_db->fetchVar('publish_timestamp', 0, $sql);
 
 				switch($sort){
 
-					case "DESC":					
-						$end = mktime(0, 0, 0, date('m', $relative_start)-$max_months+1, 1, date('Y', $relative_start));	
+					case "DESC":
+						$end = mktime(0, 0, 0, date('m', $relative_start)-$max_months+1, 1, date('Y', $relative_start));
 						$where .= " AND (UNIX_TIMESTAMP(t1.publish_date) <= '$relative_start' AND UNIX_TIMESTAMP(t1.publish_date) >= '$end')";
 
 						break;
@@ -133,17 +133,17 @@
 					case "ASC":
 						## Since this is assending, we need to start from 0. The DS editor will give us 1+
 						$max_months--;
-					
+
 						$last_day = date('d', mktime(0, 0, 0, date('m', $relative_start)+1, 0, date('Y', $relative_start)));
-						$end = mktime(23, 59, 59, date('m', $relative_start)+$max_months, $last_day, date('Y', $relative_start));					
+						$end = mktime(23, 59, 59, date('m', $relative_start)+$max_months, $last_day, date('Y', $relative_start));
 
 						$where .= " AND (UNIX_TIMESTAMP(t1.publish_date) >= '$relative_start' AND UNIX_TIMESTAMP(t1.publish_date) <= '$end')";
 						break;
 
-				}	
+				}
 
 
-			}else{		
+			}else{
 
 				##We are trying to preview
 				if(isset($param['limit']))
@@ -152,10 +152,10 @@
 				elseif($this->_dsFilterLIMIT != '')
 					$limit = intval($this->_dsFilterLIMIT);
 
-				##Prevent things from getting to big	
-				if($where == NULL) 
+				##Prevent things from getting to big
+				if($where == NULL)
 					$limit = 50;
-			}			
+			}
 
 			$start = 0;
 
@@ -177,7 +177,7 @@
 				$pagenumber = $this->__resolveDefine("dsFilterPAGENUMBER");
 				$kPageNumber = max(1, intval($pagenumber));
 
-				if(!$limit) $limit = 50;		
+				if(!$limit) $limit = 50;
 
 				$kTotalPages = ceil($kTotalEntryCount * (1 / $limit));
 
@@ -194,10 +194,10 @@
 				 . "LEFT JOIN `tbl_entries2sections` AS t8 ON t1.id = t8.entry_id "
 				 . "WHERE t8.section_id = '$section_id' " . $where
 				 . "GROUP BY t1.`id` "
-				 . "ORDER BY t1.`publish_date_gmt` " . $sort . ($limit ? " LIMIT $start, $limit" : '');			
-		
+				 . "ORDER BY t1.`publish_date_gmt` " . $sort . ($limit ? " LIMIT $start, $limit" : '');
 
-			##Check the cache 			 
+
+			##Check the cache
 			$hash_id = md5(get_class($this) . serialize($env_url));
 
 			if($param['caching'] && $cache = $this->check_cache($hash_id)){
@@ -213,7 +213,7 @@
             $xml->setAttribute("section-id", $section_id);
 
 			##Grab the records
-			$entries = $this->_db->fetchCol("id", $sql);		
+			$entries = $this->_db->fetchCol("id", $sql);
 
 			##Populate the XML
 			if(empty($entries) || !is_array($entries)){
@@ -233,21 +233,21 @@
 
 				}
 
-				foreach($entries as $entry_id){				
+				foreach($entries as $entry_id){
 
 					$row = $entryManager->fetchEntriesByID($entry_id, false, true);
 
 		            $entry = new XMLElement("entry");
 		            $entry->setAttribute("id", $row['id']);
 		            $entry->setAttribute("handle", trim($row['fields'][$row['primary_field']]['handle']));
-					$entry->setAttribute('linked-count', ''.count($row['linked_entries']).'');     
+					$entry->setAttribute('linked-count', ''.count($row['linked_entries']).'');
 
 					$date_local = $obDate->get(true, false, $row['timestamp_gmt']);
 
 		            $entry_fields = array(
 						"date" => General::createXMLDateObject($date_local),
-						"time" => General::createXMLTimeObject($date_local),		
-		            	"rfc822-date" => date("D, d M Y H:i:s \G\M\T", $obDate->get(false, false, $row['timestamp_gmt']))		
+						"time" => General::createXMLTimeObject($date_local),
+		            	"rfc822-date" => date("D, d M Y H:i:s \G\M\T", $obDate->get(false, false, $row['timestamp_gmt']))
 		            );
 
 		            $this->__addChildFieldsToXML($entry_fields, $entry);
@@ -265,7 +265,7 @@
 	                );
 
 	                $this->__addChildFieldsToXML($author_fields, $author, "author");
-		            $entry->addChild($author);				
+		            $entry->addChild($author);
 
 					##Custom Fields
 
@@ -278,17 +278,17 @@
 						foreach($fields as $f){
 
 							if(@in_array($f['field_handle'], $this->_dsFilterXMLFIELDS)){
-								$newField = new XMLElement($f['field_handle']);	
+								$newField = new XMLElement($f['field_handle']);
 
 								if($f['type'] == 'list' || $f['type'] == 'multiselect'){
 									foreach($f['value_raw'] as $val){
 										$item = new XMLElement("item", $val);
 										$item->setAttribute("handle", Lang::createHandle($val, $this->_parent->getConfigVar('handle_length', 'admin')));
-										$newField->addChild($item);		
+										$newField->addChild($item);
 									}
 
 								}
-								
+
 								elseif($f['type'] == 'foreign'){
 
 									$sid = $f['foreign_section'];
@@ -297,48 +297,48 @@
 									$newField->setAttribute("type", 'foreign');
 									$newField->setAttribute("section-id", $sid);
 									$newField->setAttribute("section-handle", $section_handle);
-																	
+
 									if(!is_array($f['value_raw'])) $f['value_raw'] = array($f['value_raw']);
-								
+
 									foreach($f['value_raw'] as $h){
 										$entry_id = $entryManager->fetchEntryIDFromPrimaryFieldHandle($sid, $h);
 										$e = $entryManager->fetchEntriesByID($entry_id, false, true);
-										
-										$item = new XMLElement("item", trim($e['fields'][$e['primary_field']]['value']));		
+
+										$item = new XMLElement("item", trim($e['fields'][$e['primary_field']]['value']));
 										$item->setAttribute("entry-id", $entry_id[0]);
-										$item->setAttribute("entry-handle", $e['fields'][$e['primary_field']]['handle']);	
-										$newField->addChild($item);											
+										$item->setAttribute("entry-handle", $e['fields'][$e['primary_field']]['handle']);
+										$newField->addChild($item);
 									}
-		
-								}								
-								
-								elseif($f['type'] == 'upload'){	
+
+								}
+
+								elseif($f['type'] == 'upload'){
 
 									foreach($f['value_raw'] as $val){
 										$item = new XMLElement("item");
 										$item->addChild(new XMLElement("path", trim($val['path'], '/')));
 										$item->addChild(new XMLElement("type", $val['type']));
 										$item->addChild(new XMLElement("size", General::formatFilesize($val['size'])));
-										$newField->addChild($item);	
-									}	
+										$newField->addChild($item);
+									}
 
 								}
-								
+
 								elseif($f['type'] == 'checkbox'){
 									$newField->setValue($f['value_raw']);
 
 								}
-								
+
 								elseif($f['type'] == 'select'){
 									$newField->setValue($f['value_raw']);
-									$newField->setAttribute("handle", $f['handle']);	
+									$newField->setAttribute("handle", $f['handle']);
 
 								}
-								
+
 								else{
 									$key = 'value';
 									if($f['format'] != 1) $key = 'value_raw';
-									
+
 									$f[$key] = trim($f[$key]);
 									$value = $f[$key];
 
@@ -362,9 +362,9 @@
 
 						}
 
-						$entry->addChild($customFields);	
+						$entry->addChild($customFields);
 
-					endif;									
+					endif;
 
 					##Comments
 					$commenting = $this->_db->fetchVar('commenting', 0, "SELECT `commenting` FROM `tbl_sections` WHERE `id` = '$section_id' LIMIT 1");
@@ -374,23 +374,23 @@
 
 						$sql = "SELECT  count(*) as `count` "
 							 . "FROM `tbl_comments` "
-							 . "WHERE `entry_id` = '". $row['id'] ."'";							 		
+							 . "WHERE `entry_id` = '". $row['id'] ."'";
 
 						$comment_count = max(0, @intval($this->_db->fetchVar("count", 0, $sql . " AND `spam` = 'no'")));
 						$spam_count = max(0, @intval($this->_db->fetchVar("count", 0, $sql . " AND `spam` = 'yes'")));
 
 						$comments->setAttribute("count", "" .$comment_count. "");
-						$comments->setAttribute("spam", "" .$spam_count. "");	
+						$comments->setAttribute("spam", "" .$spam_count. "");
 
-						$entry->addChild($comments);	
+						$entry->addChild($comments);
 					}
 
-					$xml->addChild($entry);		
+					$xml->addChild($entry);
 
 			    }
 		    }
 
-			##------------------------------		
+			##------------------------------
 
 			##Write To Cache
 			if($param['caching']){
@@ -401,7 +401,7 @@
 
 			return $xml;
 
-		}	
+		}
 
 	}
 

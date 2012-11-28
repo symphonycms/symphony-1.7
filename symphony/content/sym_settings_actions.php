@@ -1,20 +1,31 @@
-<?php 
+<?php
+
+	/***
+	 *
+	 * Symphony web publishing system
+	 *
+	 * Copyright 2004–2006 Twenty One Degrees Pty. Ltd.
+	 *
+	 * @version 1.7
+	 * @licence https://github.com/symphonycms/symphony-1.7/blob/master/LICENCE
+	 *
+	 ***/
 
 	$GLOBALS['pageTitle'] = 'File Actions';
 
 	if(isset($_GET['sync'])){
 
 		if($_GET['sync'] == 'complete'):
-			$Admin->pageAlert("workspace-sync-complete");					
+			$Admin->pageAlert("workspace-sync-complete");
 
 		elseif($_GET['sync'] == 'failed'):
 			$Admin->pageAlert("workspace-sync-failed", NULL, false, 'error');
-			
+
 		endif;
 	}
-	
+
 	if(isset($_GET['uninstall']) && $_GET['uninstall'] == 'failed')
-		$Admin->pageAlert('uninstall-failed', NULL, false, 'error');	
+		$Admin->pageAlert('uninstall-failed', NULL, false, 'error');
 
 ?>
 

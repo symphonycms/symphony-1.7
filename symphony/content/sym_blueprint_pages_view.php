@@ -1,85 +1,85 @@
 <?php
 
-	###
-	#
-	#  Symphony web publishing system
-	# 
-	#  Copyright 2004 - 2006 Twenty One Degrees Pty. Ltd. This code cannot be
-	#  modified or redistributed without permission.
-	#
-	#  For terms of use please visit http://21degrees.com.au/products/symphony/terms/
-	#
-	###
+	/***
+	 *
+	 * Symphony web publishing system
+	 *
+	 * Copyright 2004–2006 Twenty One Degrees Pty. Ltd.
+	 *
+	 * @version 1.7
+	 * @licence https://github.com/symphonycms/symphony-1.7/blob/master/LICENCE
+	 *
+	 ***/
 
-	print '<?xml version="1.0" encoding="utf-8"?'.'>'; 
-	
+	print '<?xml version="1.0" encoding="utf-8"?'.'>';
+
 	$page_handle = ($_GET['handle'] ? $_GET['handle'] : NULL);
-	
+
 	require_once(LIBRARY . "/class.site.php");
-	require_once(TOOLKIT . "/class.profiler.php");	
+	require_once(TOOLKIT . "/class.profiler.php");
 	require_once(TOOLKIT . "/class.xmlrepair.php");
-	
+
 	$active = "xml";
-	
+
 	switch($_REQUEST['type']){
-		case "page":	
-			$profiler = new Profiler;	
-		
-			$Site = new Site($page_handle, $DB, $Admin->_config, $profiler, false);	
-			
+		case "page":
+			$profiler = new Profiler;
+
+			$Site = new Site($page_handle, $DB, $Admin->_config, $profiler, false);
+
 			$page_name = $DB->fetchVar("title", 0, "SELECT `title` FROM `tbl_pages` WHERE `handle` = '".$Site->_page."'");
-			
-			$profiler->sample("Page Initialization", PROFILE_LAP);	
-				
-			##Use preview mode	
+
+			$profiler->sample("Page Initialization", PROFILE_LAP);
+
+			##Use preview mode
 			if($_GET['mode'] == 'preview')
 				$Site->togglePreviewMode();
-		
+
 			#Render the page
 			$output = $Site->display(array(), 'TRANSFORMED', false);
 			$xml = $Site->buildXML(NULL, NULL, true, false);
-			$xsl = $Site->display(array(), "XSL", false);	
-		
+			$xsl = $Site->display(array(), "XSL", false);
+
 			#Record the render time
 			$profiler->sample("Total Page Render Time");
 			break;
-			
+
 		case "datasource":
 			$DSM = new DatasourceManager(array('parent' => &$Admin));
 			$obXML = new XMLElement("data");
 			$obXML->setIncludeHeader(true);
-			
+
 			##DATASOURCES
-			$dsParam = array("indent-depth" => 2, 
-							 "caching" => false, 
-							 "indent" => true, 
+			$dsParam = array("indent-depth" => 2,
+							 "caching" => false,
+							 "indent" => true,
 							 "preview" => true);
-							 
+
 			$ds =& $DSM->create($page_handle, array('parent' => $this, 'env' => array()));
 			$result = $ds->preview($dsParam);
 
 			if(@is_object($result))
 				$xml = trim($result->generate(true, 0));
-				
+
 			else
 				$xml = trim($result);
-				
+
 			$page_name = $page_handle;
-			
+
 			$active = "xml";
 			if($xml == "") $output = $xml = $xsl = "No Datasource by the name '$page_handle' was found.";
-			
+
 			break;
-			
+
 	}
-	
+
 	$xml = trim($xml);
 	$xml = General::sanitize($xml);
-	
+
 	$xsl = trim($xsl);
 	$xsl = str_replace("\r\n", "\n", trim($xsl));
 	$xsl = General::sanitize($xsl);
-	
+
 	$output = trim($output);
 	$output = General::sanitize($output);
 
@@ -108,32 +108,32 @@
 	</ul>
 
 			<ol id="xml">
-<?php 
-	if(is_array($xml) && !empty($xml)){ 
+<?php
+	if(is_array($xml) && !empty($xml)){
 			foreach($xml as $line){
 				print "				<li><code>$line</code></li>\n";
 			}
-	} 
+	}
 ?>
 			</ol>
-		
+
 			<ol id="xslt">
-<?php 
-	if(is_array($xsl) && !empty($xsl)){ 
+<?php
+	if(is_array($xsl) && !empty($xsl)){
 			foreach($xsl as $line){
 				print "				<li><code>$line</code></li>\n";
 			}
-	} 
+	}
 ?>
 			</ol>
-	
+
 			<ol id="output">
-<?php 
-	if(is_array($output) && !empty($output)){ 
+<?php
+	if(is_array($output) && !empty($output)){
 			foreach($output as $line){
 				print "				<li><code>$line</code></li>\n";
 			}
-	} 
+	}
 ?>
 			</ol>
 

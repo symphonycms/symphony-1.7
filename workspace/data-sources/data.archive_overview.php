@@ -1,35 +1,35 @@
-<?php	
-		
-	Class dsArchive_overview Extends DataSource{			
-		
+<?php
+
+	Class dsArchive_overview Extends DataSource{
+
 		var $_dsFilterLIMIT_MONTHS = '24';
 		var $_dsFilterSORT = 'desc';
 		var $_dsFilterFORMAT_TYPE = 'archive-overview';
 		var $_dsFilterCUSTOM = array(
 						'publish' => 'yes',
 				);
-	
+
 		function __construct($args = array()){
 			parent::__construct($args);
-			$this->_cache_sections = array('comments', 'entries', 'authors', 'customfields');			
+			$this->_cache_sections = array('comments', 'entries', 'authors', 'customfields');
 		}
-		
-		## This function is required in order to edit it in the data source editor page. 
+
+		## This function is required in order to edit it in the data source editor page.
 		## If this file is in any way edited manually, you must set the return value of this
-		## function to 'false'. Failure to do so may result in your Datasource becoming 
+		## function to 'false'. Failure to do so may result in your Datasource becoming
 		## accidently messed up
 		function allowEditorToParse(){
 			return true;
 		}
-				
+
 		## This function is required in order to identify what type of data source this is for
 		## use in the data source editor. It must remain intact. Do not include this function into
 		## custom data sources
 		function getType(){
 			return 'entries';
 		}
-					
-		function about(){		
+
+		function about(){
 			return array(
 						 'name' => 'Archive Overview',
 						 'description' => 'NULL',
@@ -37,23 +37,23 @@
 										   'website' => 'http://symphony.local:8888',
 										   'email' => 'alistair@21degrees.com.au'),
 						 'version' => '1.0',
-						 'release-date' => '2007-03-08 12:23:28');			 
+						 'release-date' => '2007-03-08 12:23:28');
 		}
 
 		function grab($param=array()){
 
 			## Decide if we return an emtpy set or not
 			if($this->__forceEmptySet()) {
-				
+
 				##Create the XML container
 				$xml = new XMLElement("archive-overview");
-				$xml->setAttribute("section", $this->getType());				
+				$xml->setAttribute("section", $this->getType());
 				$xml->addChild(new XMLElement("error", "No Records Found."));
 
 				return $xml;
 			}
 
-			$obDate = $this->_parent->getDateObj(); 
+			$obDate = $this->_parent->getDateObj();
 
 			extract($this->_env, EXTR_PREFIX_ALL, 'env');
 
@@ -62,23 +62,23 @@
 			include_once(TOOLKIT . '/class.entrymanager.php');
 			$entryManager = new EntryManager($this->_parent);
 
-			$section_id = $entryManager->fetchSectionIDFromHandle($this->getType());			
+			$section_id = $entryManager->fetchSectionIDFromHandle($this->getType());
 
-			##Prepare the Query			
+			##Prepare the Query
 			if($handle = $this->__resolveDefine("dsFilterHANDLE")){
-				$entries = $entryManager->fetchEntryIDFromPrimaryFieldHandle($section_id, $handle);						
+				$entries = $entryManager->fetchEntryIDFromPrimaryFieldHandle($section_id, $handle);
 				$where .= " AND t1.`id`".($this->__isDefineNotClause("dsFilterHANDLE") ? ' NOT' : '')." IN ('" . @implode("', '", $entries) . "') ";
 
 			}
 
-			if($date = $this->__resolveDefine("dsFilterDAY"))	
-				$where .= " AND DATE_FORMAT(t1.publish_date, '%d') ".($this->__isDefineNotClause("dsFilterDAY") ? '!' : '')."= '" . $date . "' ";			
+			if($date = $this->__resolveDefine("dsFilterDAY"))
+				$where .= " AND DATE_FORMAT(t1.publish_date, '%d') ".($this->__isDefineNotClause("dsFilterDAY") ? '!' : '')."= '" . $date . "' ";
 
-			if($month = $this->__resolveDefine("dsFilterMONTH"))	
+			if($month = $this->__resolveDefine("dsFilterMONTH"))
 				$where .= " AND DATE_FORMAT(t1.publish_date, '%m') ".($this->__isDefineNotClause("dsFilterMONTH") ? '!' : '')."= '" . $month . "' ";
 
-			if($year = $this->__resolveDefine("dsFilterYEAR"))	
-				$where .= " AND DATE_FORMAT(t1.publish_date, '%Y') ".($this->__isDefineNotClause("dsFilterYEAR") ? '!' : '')."= '" . $year . "' ";	
+			if($year = $this->__resolveDefine("dsFilterYEAR"))
+				$where .= " AND DATE_FORMAT(t1.publish_date, '%Y') ".($this->__isDefineNotClause("dsFilterYEAR") ? '!' : '')."= '" . $year . "' ";
 
 			if($this->_dsFilterINCLUDEPOSTDATED != 'yes')
 				$where .= " AND UNIX_TIMESTAMP(t1.publish_date_gmt) <= '" . $obDate->get(false, false) . "' ";
@@ -97,7 +97,7 @@
 						$joins .= " LEFT JOIN `tbl_entries2customfields_list` AS t$table_id ON t1.`id` = t$table_id.`entry_id` AND t$table_id.field_id = ".$field['id']." ";
 						$where .= " AND (t$table_id.value_raw = '$value' OR t$table_id.handle = '$value_handle') ";
 					}
-					
+
 					else{
 						$joins .= " LEFT JOIN `tbl_entries2customfields` AS t$table_id ON t1.`id` = t$table_id.`entry_id` AND t$table_id.field_id = ".$field['id']." ";
 						$where .= " AND (t$table_id.value_raw = '$value' OR t$table_id.handle = '$value_handle') ";
@@ -109,8 +109,8 @@
 			}
 
 			if($this->_dsFilterSORT != '')
-				$sort = strtoupper($this->_dsFilterSORT);				
-				
+				$sort = strtoupper($this->_dsFilterSORT);
+
 			$sql = "SELECT t1.id, t1.publish_date_gmt "
 				 . "FROM `tbl_entries` AS t1 "
 				 . "LEFT JOIN `tbl_metadata` AS t2 ON t1.`id` = t2.`relation_id` "
@@ -120,9 +120,9 @@
 				 . "LEFT JOIN `tbl_entries2sections` AS t8 ON t1.id = t8.entry_id "
 				 . "WHERE t8.section_id = '$section_id' " . $where
 				 . "GROUP BY t1.`id` "
-				 . "ORDER BY t1.`publish_date_gmt` " . $sort;		
+				 . "ORDER BY t1.`publish_date_gmt` " . $sort;
 
-			##Check the cache 			 
+			##Check the cache
 			$hash_id = md5(get_class($this) . serialize($env_url));
 
 			if($param['caching'] && $cache = $this->check_cache($hash_id)){
@@ -137,7 +137,7 @@
 			$xml->setAttribute("section", $this->getType());
 
 			##Grab the records
-			$entries = $this->_db->fetch($sql);		
+			$entries = $this->_db->fetch($sql);
 
 			$current_month = date("m", $obDate->get(true, false));
 			$current_year = date("Y", $obDate->get(true, false));
@@ -146,7 +146,7 @@
 			if(empty($entries) || !is_array($entries)){
 				$xml->addChild(new XMLElement("error", "No Records Found."));
 				return $xml;
-				
+
 			}else{
 
 				$bin = array();
@@ -162,19 +162,19 @@
 
 				if($sort && $sort == 'DESC'){
 					$end_year = $current_year;
-					
+
 					$bin_years = array_keys($bin);
 					rsort($bin_years);
-					
+
 					for($ii = ($bin_years[0]+1); $ii <= $current_year; $ii++){
 						$bin[$ii] = array();
 					}
-					
+
 					$bin = array_reverse($bin, true);
-					
+
 				}else
 					$start_year = $years[0];
-				
+
 				foreach($bin as $year => $months){
 
 					$xYear = new XMLElement("year");
@@ -182,7 +182,7 @@
 
 					#foreach($months as $month => $count){
 					if($sort && $sort == 'DESC'){
-						for($month = 12; $month > 0; $month--){	
+						for($month = 12; $month > 0; $month--){
 							if($current_year > $year || ($current_year == $year && $current_month >= $month)){
 								$xMonth = new XMLElement("month");
 								$xMonth->setAttribute("value", ($month < 10 ? "0$month" : $month));
@@ -190,10 +190,10 @@
 								$xYear->addChild($xMonth);
 
 							}
-						}	
+						}
 
 					}else{
-						for($month = 1; $month <= 12; $month++){	
+						for($month = 1; $month <= 12; $month++){
 							if($current_year > $year || ($current_year == $year && $current_month >= $month)){
 								$xMonth = new XMLElement("month");
 								$xMonth->setAttribute("value", ($month < 10 ? "0$month" : $month));
@@ -207,10 +207,10 @@
 					$xml->addChild($xYear);
 
 					if($sort && $sort == 'DESC')
-						$start_year = $year;	
+						$start_year = $year;
 
 					else
-						$end_year = $year;				
+						$end_year = $year;
 
 			    }
 
@@ -219,7 +219,7 @@
 
 		    }
 
-			##------------------------------		
+			##------------------------------
 
 			##Write To Cache
 			if($param['caching']){
@@ -230,7 +230,7 @@
 
 			return $xml;
 
-		}	
+		}
 
 	}
 

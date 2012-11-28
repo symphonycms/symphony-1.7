@@ -1,40 +1,40 @@
 <?php
 
-	###
-	#
-	#  Symphony web publishing system
-	# 
-	#  Copyright 2004 - 2006 Twenty One Degrees Pty. Ltd. This code cannot be
-	#  modified or redistributed without permission.
-	#
-	#  For terms of use please visit http://21degrees.com.au/products/symphony/terms/
-	#
-	###
+	/***
+	 *
+	 * Symphony web publishing system
+	 *
+	 * Copyright 2004–2006 Twenty One Degrees Pty. Ltd.
+	 *
+	 * @version 1.7
+	 * @licence https://github.com/symphonycms/symphony-1.7/blob/master/LICENCE
+	 *
+	 ***/
 
 	$author_id = $_REQUEST['id'];
 
     if($author_id) {
-		
+
 			$sql = "SELECT *  "
 			  	. "FROM `tbl_authors` "
 		      . "WHERE `id` = '".addslashes($_GET['id'])."' ";
-		      
+
 		if($fields = $DB->fetchRow(0, $sql)) {
 			$fields['allow_sections'] = @explode(",", $fields['allow_sections']);
-			
+
 		} else {
 			General::redirect(URL . "/symphony/?page=/settings/authors/new/");
 		}
-		
+
 	}else{
 		General::redirect(URL . "/symphony/?page=/settings/authors/new/");
 	}
-	
+
 	$GLOBALS['pageTitle'] = $fields['firstname'] . " " . $fields['lastname'];
-	
+
 	$status = ($fields['superuser'] == '1' ? 'Administrator' : 'Author');
 	$status = ($fields['owner'] == '1' ? 'Owner' : $status);
-	
+
 ?>
 
 	<form id="settings" action="" method="post">

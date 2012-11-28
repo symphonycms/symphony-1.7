@@ -1,21 +1,21 @@
 <?php
 
-	###
-	#
-	#  Symphony web publishing system
-	# 
-	#  Copyright 2004 - 2006 Twenty One Degrees Pty. Ltd. This code cannot be
-	#  modified or redistributed without permission.
-	#
-	#  For terms of use please visit http://21degrees.com.au/products/symphony/terms/
-	#
-	###
+	/***
+	 *
+	 * Symphony web publishing system
+	 *
+	 * Copyright 2004–2006 Twenty One Degrees Pty. Ltd.
+	 *
+	 * @version 1.7
+	 * @licence https://github.com/symphonycms/symphony-1.7/blob/master/LICENCE
+	 *
+	 ***/
 
 	if(!defined("__IN_SYMPHONY__")) die("<h2>Symphony Error</h2><p>You cannot directly access this file</p>");
 
 	Class MySQLDump extends Object {
 		var $connection;
-	
+
 		function __construct ($connection) {
 			$this->connection = $connection;
 		}
@@ -25,19 +25,19 @@
 
 			$tables = $this->_getTables ($match);
 			foreach ($tables as $name => $info) {
-			
+
 				if($flag == "BOTH" || $flag == "STRUCTURE_ONLY"){
 					$data .= "\n\n-- *** STRUCTURE: `$name` ***\n";
 					$data .= "DROP TABLE IF EXISTS `$name`;\n";
 					$data .= $this->_dumpTableSQL ($name, $info['type'], $info['fields'], $info['indexes']);
 				}
-			
+
 				if($flag == "BOTH" || $flag == "DATA_ONLY"){
 					$data .= "\n\n-- *** DATA: `$name` ***\n";
 					if (strtoupper ($info['type']) == 'INNODB') {
 						$data .= "SET FOREIGN_KEY_CHECKS = 0;\n\n";
 					}
-				
+
 					$data .= $this->_dumpTableData ($name, $info['fields'], $condition);
 					if (strtoupper ($info['type']) == 'INNODB') {
 						$data .= "SET FOREIGN_KEY_CHECKS = 1;\n\n";
@@ -47,7 +47,7 @@
 
 			return $data;
 		}
-	
+
 		function _dumpTableData ($name, $fields, $condition=NULL) {
 			$fieldList = join (', ', array_map (create_function ('$x', 'return "`$x`";'), array_keys ($fields)));
 			$query = 'SELECT ' . $fieldList;
@@ -59,19 +59,19 @@
 			foreach ($rows as $row) {
 				$value .= 'INSERT INTO `' . $name . '` (' . $fieldList . ") VALUES (";
 				$fieldValues = array ();
-			
+
 				foreach ($fields as $fieldName => $info) {
 					$fieldValue = $row[$fieldName];
 
 					if ($info['null'] == 1 && trim($fieldValue) == "") {
 						$fieldValues[] = "NULL";
-					
+
 					}elseif(substr($info['type'], 0, 4) == 'enum'){
 						$fieldValues[] = "'".$fieldValue."'";
-						
+
 					}elseif (is_numeric ($fieldValue)) {
 						$fieldValues[] = $fieldValue;
-					
+
 					}else {
 						$fieldValues[] = "'" . mysql_real_escape_string ($fieldValue) . "'";
 					}
@@ -83,7 +83,7 @@
 
 			return $value;
 		}
-	
+
 		function _dumpTableSQL ($table, $type, $fields, $indexes) {
 
 			$query = 'SHOW CREATE TABLE `' . $table . '`';
@@ -94,7 +94,7 @@
 
 		function _getTables ($match=null) {
 			$query = 'SHOW TABLES' . ($match ? " LIKE '$match%'" : "");
-		
+
 			$rows = $this->connection->fetch ($query);
 			$rows = array_map (create_function ('$x', 'return array_values ($x);'), $rows);
 			$tables = array_map (create_function ('$x', 'return $x[0];'), $rows);
@@ -137,7 +137,7 @@
 					'default' => $default,
 					'extra'   => $extra
 				);
-			
+
 				$result[$name] = $field;
 			}
 

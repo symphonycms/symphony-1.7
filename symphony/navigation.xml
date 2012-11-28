@@ -1,42 +1,35 @@
-<navigation>  		
-    
-    <node link="/publish/entries/" name="Publish" >
-    	<children>			
-
-	        <node link="/publish/comments/" 	name="Comments" />
-	        <node link="/publish/comments/settings/" limit="super" visible="no" name="Comments Settings" />
-	        <node link="/publish/filemanager/"  name="File Manager" /> 
-	    </children>
-    </node>
-
-    <node link="/structure/sections/" name="Structure" limit="super">
-    	<children>
-	        <node link="/structure/sections/" 	    name="Sections" />
-	        <node link="/structure/customfields/"   name="Custom Fields" />	        
-	    </children>
-    </node>
-   
-    <node link="/blueprint/pages/" name="Blueprints" limit="super">
-    	<children>
-	        <node link="/blueprint/pages/" 	      name="Pages" />
-	        <node link="/blueprint/components/" 	name="Components" />
-	        <node link="/blueprint/controllers/" 	name="Controllers" />    
-	    </children>
-    </node>
-    
-    <node link="/campfire/" name="Campfire">
-    	<children>
-	        <node link="/campfire/" limit="super" name="Your Services" />
-	        <node link="/campfire/getservices/" limit="super" visible="no" name="Get Campfire Services" />
-	    </children>
-	  </node>
-    
-    <node link="/settings/preferences/" name="Settings" class="aft" >
-    	<children>
-    		<node link="/settings/authors/"	name="Authors" />
-	      	<node link="/settings/preferences/" limit="super" name="System Preferences" />
-	      	<node link="/settings/actions/" limit="owner" visible="no" name="File Actions" />	
-	    </children>
-     </node>
-	 
+<navigation>
+	<node link="/publish/entries/" name="Publish">
+		<children>
+			<node link="/publish/comments/" name="Comments"/>
+			<node link="/publish/comments/settings/" limit="super" visible="no" name="Comments Settings"/>
+			<node link="/publish/filemanager/" name="File Manager"/>
+		</children>
+	</node>
+	<node link="/structure/sections/" name="Structure" limit="super">
+		<children>
+			<node link="/structure/sections/" name="Sections"/>
+			<node link="/structure/customfields/" name="Custom Fields"/>
+		</children>
+	</node>
+	<node link="/blueprint/pages/" name="Blueprints" limit="super">
+		<children>
+			<node link="/blueprint/pages/" name="Pages"/>
+			<node link="/blueprint/components/" name="Components"/>
+			<node link="/blueprint/controllers/" name="Controllers"/>
+		</children>
+	</node>
+	<node link="/campfire/" name="Campfire">
+		<children>
+			<node link="/campfire/" limit="super" name="Your Services"/>
+			<node link="/campfire/getservices/" limit="super" visible="no" name="Get Campfire Services"/>
+		</children>
+	</node>
+	<node link="/settings/preferences/" name="Settings" class="aft">
+		<children>
+			<node link="/settings/authors/"	name="Authors"/>
+			<node link="/settings/preferences/" limit="super" name="System Preferences"/>
+			<node link="/settings/actions/" limit="owner" visible="no" name="File Actions"/>
+		</children>
+	</node>
 </navigation>

@@ -1,10 +1,13 @@
-/*
-	Symphony Code Editor
-
-	To learn how to add or remove auto-completion modes, check the wiki:
-
-	http://overture21.com/wiki/getting-started/code-editor
-*/
+/***
+ *
+ * Symphony web publishing system
+ *
+ * Copyright 2004–2006 Twenty One Degrees Pty. Ltd.
+ *
+ * @version 1.7
+ * @licence https://github.com/symphonycms/symphony-1.7/blob/master/LICENCE
+ *
+ ***/
 
 function CodeEditor() {
 	var textarea = document.getElementById("code-editor");

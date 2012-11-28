@@ -1,20 +1,20 @@
 <?php
 
-	###
-	#
-	#  Symphony web publishing system
-	# 
-	#  Copyright 2004 - 2006 Twenty One Degrees Pty. Ltd. This code cannot be
-	#  modified or redistributed without permission.
-	#
-	#  For terms of use please visit http://21degrees.com.au/products/symphony/terms/
-	#
-	###
+	/***
+	 *
+	 * Symphony web publishing system
+	 *
+	 * Copyright 2004–2006 Twenty One Degrees Pty. Ltd.
+	 *
+	 * @version 1.7
+	 * @licence https://github.com/symphonycms/symphony-1.7/blob/master/LICENCE
+	 *
+	 ***/
 
 	$GLOBALS['pageTitle'] = "System Preferences";
 
     $date = $Admin->getDateObj();
-    
+
     $bIsWritable = true;
 
     if(!is_writable(CONFIG)){
@@ -24,20 +24,20 @@
 
 	if(isset($_GET['_f'])){
 		switch($_GET['_f']){
-		
+
 			case "saved":
-				$Admin->pageAlert("saved-time", array("Preferences", date("h:i:sa", $date->get(true, false))));					
+				$Admin->pageAlert("saved-time", array("Preferences", date("h:i:sa", $date->get(true, false))));
 				break;
-			
+
 		}
 	}
 
 	if(defined("__SYM_MISSINGFIELDS__")){
-		$Admin->pageAlert("required", array(@implode(", ", $required)), false, 'error');		
-	}	
+		$Admin->pageAlert("required", array(@implode(", ", $required)), false, 'error');
+	}
 
-	$date->setFormat("l g:i a");	
-	
+	$date->setFormat("l g:i a");
+
 ?>
 	<form id="settings" action="<?php print $Admin->getCurrentPageURL(); ?>" method="post">
 		<h2><!-- PAGE TITLE --></h2>
@@ -49,7 +49,7 @@
 					<label><input name="settings[public][status]" type="radio" value="online" <?php print ($Admin->getConfigVar("status", "public") == "online" ? ' checked="checked"' : ""); ?> /> Live</label>
 					<label><input name="settings[public][status]" type="radio" value="offline" <?php print ($Admin->getConfigVar("status", "public") != "online" ? ' checked="checked"' : ""); ?> /> Maintenance Mode</label>
 				</div>
-				<label><input name="settings[symphony][allow_workspace_synchronisation]" <?php print ($Admin->getConfigVar('allow_workspace_synchronisation', 'symphony') == '1' ? ' checked="checked"' : ''); ?> type="checkbox" /> Allow automatic Workspace synchronisation</label>				
+				<label><input name="settings[symphony][allow_workspace_synchronisation]" <?php print ($Admin->getConfigVar('allow_workspace_synchronisation', 'symphony') == '1' ? ' checked="checked"' : ''); ?> type="checkbox" /> Allow automatic Workspace synchronisation</label>
 			</fieldset>
 			<fieldset>
 				<legend>Regional Settings</legend>
@@ -57,7 +57,7 @@
 					<select name="settings[region][time_zone]">
 
 <?php
-								
+
 								$zones[-12]  = "(GMT -12:00 hrs) Eniwetok, Kwajalein";
 								$zones[-11]  = "(GMT -11:00 hrs) Midway Island, Samoa";
 								$zones[-10]  = "(GMT -10:00 hrs) Hawaii";
@@ -88,7 +88,7 @@
 								$zones[10]   = "(GMT +10:00 hrs) Brisbane, Sydney, Papua New Guinea, Vladivostok";
 								$zones[11]   = "(GMT +11:00 hrs) Magadan, Solomon Islands, New Caledonia";
 								$zones[12]   = "(GMT +12:00 hrs) Auckland, Wellington, Fiji, Kamchatka, Marshall Island";
-								
+
 								foreach($zones as $key => $val) {
 									print '          <option value="'.$key.'" title="'. date("l g:i a", ($date->get(false, false) + ($key * 3600))). '"';
 									if($Admin->getConfigVar('time_zone', 'region') == $key) print ' selected="selected"';
@@ -100,11 +100,11 @@
 				</label>
 				<label><input name="settings[region][dst]" <?php print ($Admin->getConfigVar("dst", "region") == "yes" ? ' checked="checked"' : ""); ?> type="checkbox" /> Use daylight savings time</label>
 				<div class="group">
-					<label>Time Format	
+					<label>Time Format
 						<select name="settings[region][time_format]">
 <?php
 							$timeFormats= array( "H:i:s", "H:i", "g:i:s a", "g:i a");
-							
+
 							foreach($timeFormats as $f) {
 								print "<option value=\"".$f."\"";
 								if($Admin->getConfigVar('time_format', 'region') == $f) print " selected=\"selected\"";
@@ -125,10 +125,10 @@
 											  "Y/m/d",
 											  "m/d/Y",
 											  "m/d/y",
-											  "d/m/Y",										  
+											  "d/m/Y",
 											  "d/m/y");
 
-						
+
 						foreach($dateFormats as $f) {
 							print "<option value=\"".$f."\"";
 							if($Admin->getConfigVar('date_format', 'region') == $f) print " selected=\"selected\"";
@@ -147,4 +147,4 @@
 ?>
 			<a class="file-actions button" href="<?php print URL . "/symphony/?page=/settings/actions/"; ?>" title="File actions">File Actions</a>
 		</fieldset>
-	</form>		
+	</form>

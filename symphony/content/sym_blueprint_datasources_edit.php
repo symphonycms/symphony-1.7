@@ -1,15 +1,15 @@
 <?php
 
-	###
-	#
-	#  Symphony web publishing system
-	# 
-	#  Copyright 2004 - 2006 Twenty One Degrees Pty. Ltd. This code cannot be
-	#  modified or redistributed without permission.
-	#
-	#  For terms of use please visit http://21degrees.com.au/products/symphony/terms/
-	#
-	###
+	/***
+	 *
+	 * Symphony web publishing system
+	 *
+	 * Copyright 2004–2006 Twenty One Degrees Pty. Ltd.
+	 *
+	 * @version 1.7
+	 * @licence https://github.com/symphonycms/symphony-1.7/blob/master/LICENCE
+	 *
+	 ***/
 
 	$Admin->addScriptToHead('assets/editor.js');
 
@@ -32,8 +32,8 @@
 				"author::first-name",
 				"author::last-name",
 				"author::email",
-				"author::username"						
-			);	
+				"author::username"
+			);
 
 	##Authors
 	$xml_fields['authors'] = array(
@@ -45,7 +45,7 @@
 				"status",
 				"auth-token",
 				"email-hash"
-			);	
+			);
 
 	##Comments
 	$xml_fields['comments'] = array(
@@ -63,157 +63,157 @@
 			);
 
 
-	
+
 	$DSM = new DatasourceManager(array('parent' => &$Admin));
-	
-	$oDataSource = $DSM->create($_REQUEST['file']);	
+
+	$oDataSource = $DSM->create($_REQUEST['file']);
 
 	$about = $oDataSource->about();
-	
+
 	$GLOBALS['pageTitle'] = 'Data Sources > ' . $about['name'];
-	
+
 	$allow_parse = $oDataSource->allowEditorToParse();
 	$type = $oDataSource->getType();
-	
+
 	if(!$allow_parse)
 		$Admin->pageAlert("cannot-edit-data-source", NULL, false, 'error');
-		
+
 	else{
-		
-		if(!empty($_POST)) {		
+
+		if(!empty($_POST)) {
 			$fields = $_POST['fields'];
 			$fields['static_xml'] = General::sanitize($fields['static_xml']);
 
-		}else{		
-			
+		}else{
+
 			$fields = array();
 			$context = array();
-			
+
 			$fields['format_type'] = 'list';
-			
+
 			$vars = @get_class_vars(@get_class($oDataSource));
-			
+
 			$fields['source'] = $type;
-			
-			$constants = array(				
+
+			$constants = array(
 					array("SHOW_SPAM", "show_spam", "on"),
 					array("HANDLE", "handle"),
 					array("YEAR", "year"),
-					array("MONTH", "month"),			
+					array("MONTH", "month"),
 					array("DAY", "day"),
-					array("ENCODE", "html_encode", "on"),		
-					array("LIMIT", "max_records"),	
-					array("LIMIT_MONTHS", "max_months"),				
+					array("ENCODE", "html_encode", "on"),
+					array("LIMIT", "max_records"),
+					array("LIMIT_MONTHS", "max_months"),
 					array("SORT", "sort"),
 					array("INCLUDEPOSTDATED", "includepostdated", "on"),
-					array("FORCEEMPTYSET", "force-empty-set", "on"),					
+					array("FORCEEMPTYSET", "force-empty-set", "on"),
 					array("USERNAME", "username"),
-					array("ENTRY", "entry"),						
+					array("ENTRY", "entry"),
 					array("SHOWENTRIES", "showentries", "on"),
 					array("PAGE", "handle"),
-					array("PAGENUMBER", "page_number"),	
+					array("PAGENUMBER", "page_number"),
 					array("EXCLUDEHIDDEN", "excludehidden", "on"),
 					array("MAX_DEPTH", "max_depth"),
-					array("CUSTOM", "custom"),														
+					array("CUSTOM", "custom"),
 					array("FORMAT_TYPE", "format_type"),
-					array("XMLFIELDS", "xml-fields"),				
+					array("XMLFIELDS", "xml-fields"),
 					array("SECTION", "comments"),
 					array("STATUS", "status"),
 					array("CUSTOMFIELD", "customfield"),
 					array("PARENTSECTION", "parentsection")
-					
-			);		
-			
+
+			);
+
 			foreach($constants as $c){
 				list($name, $index, $value) = $c;
-				if(array_key_exists("_dsFilter$name", $vars)) $context[$index] = ($value ? $value : $oDataSource->{"_dsFilter$name"});	
+				if(array_key_exists("_dsFilter$name", $vars)) $context[$index] = ($value ? $value : $oDataSource->{"_dsFilter$name"});
 			}
-					
+
 
 			if(is_array($context['xml-fields']) && !empty($context['xml-fields'])):
 				$tmp = array();
 				foreach($context['xml-fields'] as $id => $f){
-					
-					if(is_array($f) && !empty($f)){			
-						foreach($f as $child){			
-							$tmp[] = "$id::$child";				
-						}		
-							
+
+					if(is_array($f) && !empty($f)){
+						foreach($f as $child){
+							$tmp[] = "$id::$child";
+						}
+
 					}else{
 						$tmp[] = $f;
 					}
-					
+
 					$fields['xml-fields'][$type] = $tmp;
-					
+
 				}
 			endif;
-			
+
 			unset($context['xml-fields']);
-			
+
 			switch($type){
-					
-				case "comments":			
+
+				case "comments":
 					break;
-					
-				case "authors":					
+
+				case "authors":
 					break;
-					
+
 				case "options":
-					$context['customfield'] = $context['parentsection'] . '::' . $context['customfield'];					
+					$context['customfield'] = $context['parentsection'] . '::' . $context['customfield'];
 					break;
-					
-				case "navigation":	
+
+				case "navigation":
 					$fields['navigation']['handle'] = $context['handle'];
-					unset($context['handle']);					
-					break;	
-					
+					unset($context['handle']);
+					break;
+
 				case "static_xml":
 					$fields['static_xml'] = General::sanitize($oDataSource->grab());
 					break;
 
 				default:
-				
+
 					if(is_array($context['custom']) && !empty($context['custom'])){
 						$fields['custom'][$type] = $context['custom'];
 						unset($context['custom']);
 					}
-						
-					break;		
-					
+
+					break;
+
 			}
 
 			$fields = array_merge($fields, $context);
 
 		}
-		
-	}	
 
-	$fields["name"] = General::sanitize($about['name']); 
-	
-	$date = $Admin->getDateObj();	
-	
+	}
+
+	$fields["name"] = General::sanitize($about['name']);
+
+	$date = $Admin->getDateObj();
+
 	if(defined("__SYM_ENTRY_MISSINGFIELDS__")){
 		$Admin->pageAlert("required", array(ucwords(@implode(", ", $required))), false, 'error');
 	}
-		
+
 	if(isset($_GET['_f'])){
 		switch($_GET['_f']){
-		
+
 			case "saved":
 				$Admin->pageAlert("saved-time", array("Data source", date("h:i:sa", $date->get(true, false))));
-				break;			
+				break;
 		}
-	}	
-	
+	}
+
 	if(defined("__SYM_ENTRY_MISSINGFIELDS__")){
 		$Admin->pageAlert("required", array(ucwords(@implode(", ", $required))), false, 'error');
 	}
 
 	include_once(TOOLKIT . "/class.entrymanager.php");
-	$EM = new EntryManager($Admin);	
+	$EM = new EntryManager($Admin);
 
 	$can_use_customfield_source = false;
-	
+
 	foreach($sections as $s){
 		$schema = $EM->fetchEntryFieldSchema($s['id'], array("select", "multiselect"));
 
@@ -221,8 +221,8 @@
 			$can_use_customfield_source = true;
 			break(1);
 		}
-	}	
-			
+	}
+
 ?>
 	<form id="settings" action="" method="post">
 	  	<h2><?php print $about['name']; ?></h2>
@@ -236,7 +236,7 @@
 					<label>Source
 						<select name="fields[source]">
 							<optgroup label="Sections">
-							
+
 <?php
 		foreach($sections as $s){
 ?>
@@ -244,7 +244,7 @@
 <?php
 		}
 ?>
-		
+
 							</optgroup>
 							<optgroup label="Other">
 								<option value="authors" <?php print General::fieldValue("select", $fields['source'], "", "authors");?>>Authors</option>
@@ -252,10 +252,10 @@
 								<option value="navigation" <?php print General::fieldValue("select", $fields['source'], "", "navigation");?>>Navigation</option>
 <?php if($can_use_customfield_source){ ?>
 								<option value="options" <?php print General::fieldValue("select", $fields['source'], "", "options");?>>Custom Field</option>
-<?php } ?>									
-								<option value="static_xml" <?php print General::fieldValue("select", $fields['source'], "", "static_xml");?>>Static XML</option>								
-						
-							</optgroup>					
+<?php } ?>
+								<option value="static_xml" <?php print General::fieldValue("select", $fields['source'], "", "static_xml");?>>Static XML</option>
+
+							</optgroup>
 						</select>
 					</label>
 				</div>
@@ -263,28 +263,28 @@
 					<select name="fields[customfield]">
 <?php
 		foreach($sections as $s){
-		
+
 			$schema = $EM->fetchEntryFieldSchema($s['id'], array("select", "multiselect"));
-	
-			if(is_array($schema) && !empty($schema)){					
-?>			
-						<optgroup label="<?php print $s['name']; ?>">					
-<?php	
-					foreach($schema as $k){	
+
+			if(is_array($schema) && !empty($schema)){
+?>
+						<optgroup label="<?php print $s['name']; ?>">
+<?php
+					foreach($schema as $k){
 						$value = $s['handle'].'::'.$k['handle'];
 ?>
 							<option value="<?php print $value; ?>" <?php print General::fieldValue("select", $fields['customfield'], "", $value);?>><?php print $k['name']; ?></option>
 <?php
 					}
-?>							
+?>
 						</optgroup>
-						
+
 <?php
 			}
 		}
 ?>
 					</select>
-				</label>				
+				</label>
 			</fieldset>
 
 			<fieldset class="sections comments navigation authors">
@@ -297,11 +297,11 @@
 					<label>Month <input name="fields[month]" <?php print General::fieldValue("value", $fields['month']);?> /></label>
 					<label>Day <input name="fields[day]" <?php print General::fieldValue("value", $fields['day']);?> /></label>
 				</div>
-				
+
 				<label class="sections"><input type="checkbox" name="fields[includepostdated]" <?php print General::fieldValue("checkbox", $fields['includepostdated'], "", "on");?> /> Include post-dated entries</label>
 
 				<div class="sections comments">
-					<label class="sections comments"><input type="checkbox" name="fields[force-empty-set]" <?php print General::fieldValue("checkbox", $fields['force-empty-set'], "", "on");?> /> Return empty result set when no URL parameter values are present <small>Only effects pages with a URL schema.</small></label>					
+					<label class="sections comments"><input type="checkbox" name="fields[force-empty-set]" <?php print General::fieldValue("checkbox", $fields['force-empty-set'], "", "on");?> /> Return empty result set when no URL parameter values are present <small>Only effects pages with a URL schema.</small></label>
 				</div>
 
 				<label class="comments">Comment in Section
@@ -319,8 +319,8 @@
 				</label>
 				<div class="authors group">
 					<label>Username <input name="fields[username]" <?php print General::fieldValue("value", $fields['username']);?> /></label>
-					<label>Status 
-						<select name="fields[status]"> 
+					<label>Status
+						<select name="fields[status]">
 							<option></option>
 							<option value="author" <?php print ($fields['status'] == 'author' ? 'selected="selected"' : '');?>>Author</option>
 							<option value="administrator" <?php print ($fields['status'] == 'administrator' ? 'selected="selected"' : '');?>>Administrator</option>
@@ -349,7 +349,7 @@
 				<legend>Filter by Custom Field</legend>
 				<p>Specify a value for any custom field to only show entries with that value.</p>
 
-<?php			
+<?php
 
 			foreach($schemas as $schema){
 
@@ -358,7 +358,7 @@
 
 				$remainder = count($schema) % 2;
 
-				$ii = 0;				
+				$ii = 0;
 
 				$match = false;
 
@@ -366,13 +366,13 @@
 
 					for($ii = 0; $ii < count($schema) - 1; $ii+=2){
 
-						print '				<div class="group">' . CRLF;						
+						print '				<div class="group">' . CRLF;
 
 						for($xx = $ii; $xx <= $ii+1; $xx++){
 
 
 							print "					<label class=\"custom-filter\">" . $schema[$xx]['name'] . CRLF;
-							
+
 							if($schema[$xx]['type'] != 'input')
 								print " 					<select name=\"fields[custom][".$s['handle']."][".$schema[$xx]['handle']."] \">" . CRLF .
 								      "							<option></option>" . CRLF;
@@ -388,18 +388,18 @@
 								$bits = preg_split('/,/', $schema[$xx]['values'], -1, PREG_SPLIT_NO_EMPTY);
 								foreach($bits as $o){
 									$o = trim($o);
-									print "							<option value=\"$o\" ".General::fieldValue("select", $fields['custom'][$s['handle']][$schema[$xx]['handle']], "", $o).">$o</option>\n";	
+									print "							<option value=\"$o\" ".General::fieldValue("select", $fields['custom'][$s['handle']][$schema[$xx]['handle']], "", $o).">$o</option>\n";
 								}
 
 								$match = @in_array($fields['custom'][$s['handle']][$schema[$xx]['handle']], $bits);
-								
+
 							}elseif($schema[$xx]['type'] == 'foreign'){
 							    $row = $schema[$xx];
 
 								$sql = "SELECT * FROM `tbl_sections` WHERE `id` = '" . $row['foreign_section']. "'";
 								$section = $DB->fetchRow(0, $sql);
 
-								$sql = "SELECT * FROM `tbl_entries2customfields` WHERE `field_id` = '".$section['primary_field']."' ORDER BY `value_raw` ASC";			
+								$sql = "SELECT * FROM `tbl_entries2customfields` WHERE `field_id` = '".$section['primary_field']."' ORDER BY `value_raw` ASC";
 								$values = $DB->fetch($sql);
 
 								$match = false;
@@ -411,29 +411,29 @@
 
 									if($h == $fields['custom'][$s['handle']][$schema[$xx]['handle']]) $match = true;
 
-									print "						<option value=\"$h\" ".($h == $fields['custom'][$s['handle']][$schema[$xx]['handle']] ? ' selected="selected"' : '').">$o</option>\n";	
+									print "						<option value=\"$h\" ".($h == $fields['custom'][$s['handle']][$schema[$xx]['handle']] ? ' selected="selected"' : '').">$o</option>\n";
 								}
 
 							}elseif($schema[$xx]['type'] == 'input'){
 								print ' 					<input type="text" name="fields[custom]['.$s['handle'].']['.$schema[$xx]['handle'].']" value="'.$fields['custom'][$s['handle']][$schema[$xx]['handle']].'" />' . CRLF;
 
-																		
+
 							}else{
 								$bits = preg_split('/,/', $schema[$xx]['values'], -1, PREG_SPLIT_NO_EMPTY);
 								foreach($bits as $o){
 									$o = trim($o);
-									print "						<option value=\"$o\" ".(@in_array($o, $fields['custom'][$s['handle']][$schema[$xx]['handle']]) ? ' selected="selected"' : '').">$o</option>\n";	
+									print "						<option value=\"$o\" ".(@in_array($o, $fields['custom'][$s['handle']][$schema[$xx]['handle']]) ? ' selected="selected"' : '').">$o</option>\n";
 								}
 
-								$match = @in_array($fields['custom'][$s['handle']][$schema[$xx]['handle']], $bits);						
+								$match = @in_array($fields['custom'][$s['handle']][$schema[$xx]['handle']], $bits);
 							}
 
 							if(!$match && $fields['custom'][$s['handle']][$schema[$xx]['handle']] != '' && $schema[$xx]['type'] != 'input')
 								print '							<option value="'.$fields['custom'][$s['handle']][$schema[$xx]['handle']].'" selected="selected">'.$fields['custom'][$s['handle']][$schema[$xx]['handle']].'</option>';
 
-							if($schema[$xx]['type'] != 'input') 
+							if($schema[$xx]['type'] != 'input')
 								print '						</select>' . CRLF;
-								
+
 							print '					</label>' . CRLF;
 
 						}
@@ -449,7 +449,7 @@
 
 
 					print "					<label class=\"custom-filter\">" . $f['name'] . CRLF;
-					
+
 					if($f['type'] != 'input')
 						print " 					<select name=\"fields[custom][".$s['handle']."][".$f['handle']."] \">" . CRLF .
 						      "							<option></option>" . CRLF;
@@ -464,18 +464,18 @@
 						$bits = preg_split('/,/', $f['values'], -1, PREG_SPLIT_NO_EMPTY);
 						foreach($bits as $o){
 							$o = trim($o);
-							print "						<option value=\"$o\" ".General::fieldValue("select", $fields['custom'][$s['handle']][$f['handle']], "", $o).">$o</option>\n";	
+							print "						<option value=\"$o\" ".General::fieldValue("select", $fields['custom'][$s['handle']][$f['handle']], "", $o).">$o</option>\n";
 						}
 
 						$match = @in_array($fields['custom'][$s['handle']][$f['handle']], $bits);
-						
+
 					}elseif($f['type'] == 'foreign'){
 					    $row = $f;
 
 						$sql = "SELECT * FROM `tbl_sections` WHERE `id` = '" . $row['foreign_section']. "'";
 						$section = $DB->fetchRow(0, $sql);
 
-						$sql = "SELECT * FROM `tbl_entries2customfields` WHERE `field_id` = '".$section['primary_field']."' ORDER BY `value_raw` ASC";			
+						$sql = "SELECT * FROM `tbl_entries2customfields` WHERE `field_id` = '".$section['primary_field']."' ORDER BY `value_raw` ASC";
 						$values = $DB->fetch($sql);
 
 						$match = false;
@@ -487,34 +487,34 @@
 
 							if($h == $fields['custom'][$s['handle']][$f['handle']]) $match = true;
 
-							print "						<option value=\"$h\" ".($h == $fields['custom'][$s['handle']][$f['handle']] ? ' selected="selected"' : '').">$o</option>\n";	
+							print "						<option value=\"$h\" ".($h == $fields['custom'][$s['handle']][$f['handle']] ? ' selected="selected"' : '').">$o</option>\n";
 						}
 
 					}elseif($f['type'] == 'input'){
 						print ' 					<input type="text" name="fields[custom]['.$s['handle'].']['.$f['handle'].']" value="'.$fields['custom'][$s['handle']][$f['handle']].'" />' . CRLF;
-							
+
 					}else{
 						$bits = preg_split('/,/', $f['values'], -1, PREG_SPLIT_NO_EMPTY);
 						foreach($bits as $o){
 							$o = trim($o);
-							print "						<option value=\"$o\" ".(@in_array($o, $fields['custom'][$s['handle']][$f['handle']]) ? ' selected="selected"' : '').">$o</option>\n";	
+							print "						<option value=\"$o\" ".(@in_array($o, $fields['custom'][$s['handle']][$f['handle']]) ? ' selected="selected"' : '').">$o</option>\n";
 						}
 
-						$match = @in_array($fields['custom'][$s['handle']][$f['handle']], $bits);						
+						$match = @in_array($fields['custom'][$s['handle']][$f['handle']], $bits);
 					}
 
 					if(!$match && $fields['custom'][$s['handle']][$f['handle']] != '' && $f['type'] != 'input')
 						print '							<option value="'.$fields['custom'][$s['handle']][$f['handle']].'" selected="selected">'.$fields['custom'][$s['handle']][$f['handle']].'</option>';
 
-					if($f['type'] != 'input') 
+					if($f['type'] != 'input')
 						print '						</select>' . CRLF;
-						
-					print '					</label>' . CRLF;				
+
+					print '					</label>' . CRLF;
 				}
 
 			}
 
-			print '			</fieldset>';	
+			print '			</fieldset>';
 		}
 
 ?>
@@ -533,70 +533,70 @@
 					<label class="sections comments authors">Included Elements
 						<select name="fields[xml-elements][]" multiple="multiple">
 <?php
-		
+
 		foreach($sections as $s){
-			
+
 			$schema_all = $EM->fetchEntryFieldSchema($s['id']);
 			$included_fields = $xml_fields['entries'];
-	
+
 			foreach($schema_all as $ss){
-				$included_fields[] = $ss['handle'];			
-			}	
-			
-			
-?>												
+				$included_fields[] = $ss['handle'];
+			}
+
+
+?>
 							<optgroup label="<?php print $s['handle']; ?>">
 
-<?php		foreach($included_fields as $name){ 
-					
+<?php		foreach($included_fields as $name){
+
 				$state = 0;
-	
+
 				if(@in_array($name, $fields['xml-fields'][$s['handle']]))
 					$state = 1;
-	
+
 				else
-					$state = 0;	
-	
+					$state = 0;
+
 ?>
 								<option value="[<?php print $s['handle']; ?>][<?php print $name; ?>]" <?php print General::fieldValue("select", $state, "", "1");?>><?php print $name; ?></option>
-<?php } ?>	
+<?php } ?>
 
 							</optgroup>
 <?php
 		}
 ?>
 							<optgroup label="authors">
-<?php		foreach($xml_fields['authors'] as $name){ 
-	
+<?php		foreach($xml_fields['authors'] as $name){
+
 				$state = 0;
-	
+
 				if(@in_array($name, $fields['xml-fields']['authors']))
 					$state = 1;
-	
+
 				else
-					$state = 0;	
+					$state = 0;
 ?>
 								<option value="[authors][<?php print $name; ?>]" <?php print General::fieldValue("select", $state, "", "1");?>><?php print $name; ?></option>
 <?php } ?>
 							</optgroup>
 							<optgroup label="comments">
-<?php		foreach($xml_fields['comments'] as $name){ 
-	
+<?php		foreach($xml_fields['comments'] as $name){
+
 				$state = 0;
-	
+
 				if(@in_array($name, $fields['xml-fields']['comments']))
 					$state = 1;
-	
+
 				else
-					$state = 0;	
-	
-	
+					$state = 0;
+
+
 ?>
 								<option value="[comments][<?php print $name; ?>]" <?php print General::fieldValue("select", $state, "", "1");?>><?php print $name; ?></option>
-<?php } ?>	
+<?php } ?>
 							</optgroup>
 						</select>
-					</label>									
+					</label>
 					<label label class="sections comments">Sort Results by
 						<select name="fields[sort]">
 							<option value="asc" <?php print General::fieldValue("select", $fields['sort'], "", "asc");?>>Ascending Date (earliest first)</option>
@@ -617,9 +617,9 @@
 			<fieldset class="sections comments">
 				<legend>Limit Options</legend>
 				<div class="group">
-<?php if(isset($fields['max_months'])){ ?>					
+<?php if(isset($fields['max_months'])){ ?>
 					<label>Show a maximum of <input name="fields[max_months]" size="3" maxlength="3" <?php print General::fieldValue("value", $fields['max_months'], "12");?>> month(s).</label>
-<?php }else{ ?>			
+<?php }else{ ?>
 					<label>Show a maximum of <input name="fields[max_records]" size="3" maxlength="3" <?php print General::fieldValue("value", $fields['max_records'], "50");?> /> record(s).</label>
 
 <?php } ?>
